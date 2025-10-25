@@ -1,0 +1,11 @@
+services:
+  rpweave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: rpweave
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80

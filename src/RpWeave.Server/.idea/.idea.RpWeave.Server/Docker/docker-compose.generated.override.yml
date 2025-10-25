@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.9"
+services:
+  rpweave:
+    build:
+      context: "/home/vasil/Projects/rp_weave/src"
+      dockerfile: "Dockerfile"
+      target: "frontend"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/RpWeave.Server.Api.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "rpweave.server.api:dev"
+    ports: []
+    volumes:
+    - "/home/vasil/Projects/rp_weave/src/RpWeave.Server/RpWeave.Server.Api:/app:rw"
+    - "/home/vasil/Projects/rp_weave/src/RpWeave.Server:/src:rw"
+    - "/home/vasil/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"

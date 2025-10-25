@@ -1,0 +1,8 @@
+﻿services:
+  rpweave.server.api:
+    image: rpweave.server.api
+    build:
+      context: .
+      dockerfile: RpWeave.Server.Api/Dockerfile
+    ports:
+      - "5000:80"
