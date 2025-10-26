@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: RpWeave.Server.Api",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/RpWeave.Server.Api/RpWeave.Server.Api.csproj",
+            "launchConfigurationId": "TargetFramework=;https"
+        }
+    ]
+}
