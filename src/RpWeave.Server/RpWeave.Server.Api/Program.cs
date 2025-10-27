@@ -1,45 +1,37 @@
-using RpWeave.Server.Api;
+using System.Text.Json;
+using AspNetCore.Identity.Mongo;
+using MongoDB.Bson;
+using RpWeave.Server.Api.Seeders;
 using RpWeave.Server.Core.Startup;
+using RpWeave.Server.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAttributedServices();
+builder.Services.AddHostedService<IdentitySeeder>();
+
+builder.Services.AddIdentityMongoDbProvider<AppUser, AppUserRole, ObjectId>(identity =>
+    {
+        
+    },
+    mongo =>
+    {
+        mongo.ConnectionString = "mongodb://mongo:27017/rpweave";
+    });
 
 var app = builder.Build();
 
 app.MapOpenApi();
-
 app.UseHttpsRedirection();
-app.MapAttributedEndpoints();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-namespace RpWeave.Server.Api
-{
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}
