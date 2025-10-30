@@ -1,1 +1,138 @@
-/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Arcane & Mystical — TTRPG Worldbuilding Theme
+// Deep indigo, gold accent, and muted red warnings
+
+$worldbuilder-primary: mat.define-palette((
+  50:  #f4f1fa,
+  100: #dcd3f2,
+  200: #c2b4ea,
+  300: #a795e1,
+  400: #927fdc,
+  500: #7b68cc,  // main
+  600: #6d5bbf,
+  700: #594aa9,
+  800: #463994,
+  900: #2c2174,
+  contrast: (
+    50: black, 100: black, 200: black, 300: black,
+    400: white, 500: white, 600: white, 700: white,
+    800: white, 900: white
+  )
+), 500);
+
+$worldbuilder-accent: mat.define-palette((
+  50:  #fff8e1,
+  100: #ffecb3,
+  200: #ffe082,
+  300: #ffd54f,
+  400: #ffca28,
+  500: #ffc107,  // main (golden light)
+  600: #ffb300,
+  700: #ffa000,
+  800: #ff8f00,
+  900: #ff6f00,
+  contrast: (
+    50: black, 100: black, 200: black, 300: black,
+    400: black, 500: black, 600: black, 700: white,
+    800: white, 900: white
+  )
+), 500);
+
+$worldbuilder-warn: mat.define-palette((
+  50:  #fbe9e7,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #d32f2f,  // main
+  600: #c62828,
+  700: #b71c1c,
+  800: #8e0000,
+  900: #5f0000,
+  contrast: (
+    50: black, 100: black, 200: black, 300: black,
+    400: white, 500: white, 600: white, 700: white,
+    800: white, 900: white
+  )
+), 500);
+
+// Define typography
+$worldbuilder-typography: mat.define-typography-config(
+  $font-family: 'Merriweather, Roboto, serif',
+  $headline-1: mat.define-typography-level(96px, 112px, 300),
+  $headline-2: mat.define-typography-level(60px, 72px, 300),
+  $headline-3: mat.define-typography-level(48px, 56px, 400),
+  $headline-4: mat.define-typography-level(34px, 40px, 400),
+  $headline-5: mat.define-typography-level(24px, 32px, 500),
+  $body-1: mat.define-typography-level(16px, 24px, 400),
+  $button: mat.define-typography-level(14px, 24px, 600),
+);
+
+// Build the light theme
+$worldbuilder-light-theme: mat.define-light-theme((
+  color: (
+    primary: $worldbuilder-primary,
+    accent: $worldbuilder-accent,
+    warn: $worldbuilder-warn,
+  ),
+  typography: $worldbuilder-typography,
+));
+
+// Build the dark theme
+$worldbuilder-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $worldbuilder-primary,
+    accent: $worldbuilder-accent,
+    warn: $worldbuilder-warn,
+  ),
+  typography: $worldbuilder-typography,
+));
+
+// Apply light theme globally
+@include mat.all-component-themes($worldbuilder-light-theme);
+
+// Scoped dark theme for toggle
+.dark-theme {
+  @include mat.all-component-colors(mat.define-dark-theme((
+    color: (
+      primary: $worldbuilder-primary,
+      accent: $worldbuilder-accent,
+      warn: $worldbuilder-warn,
+    ),
+    typography: $worldbuilder-typography,
+    // Set light text colors for readability
+    foreground: (
+      base: #E0E0E0,                  // main text
+      divider: #757575,               // dividers
+      disabled: #B0B0B0,              // disabled text
+      secondary-text: #CCCCCC         // secondary/less prominent text
+    )
+  )));
+
+    background-color: #121212;      // main app background
+    color: #E0E0E0;                 // default text
+
+  .mat-card, .mat-dialog-container, .mat-snack-bar-container {
+    background-color: #303030;      // surfaces like cards, dialogs, snackbars
+    color: #E0E0E0;                 // text on these surfaces
+  }
+
+  // Optional: hover/interactive states
+  .mat-button:hover, .mat-list-item:hover {
+    background-color: #2A2A2A;
+  }
+}
+
+// Global UI tweaks
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Merriweather', 'Roboto', serif;
+  background-color: mat.get-color-from-palette($worldbuilder-primary, 50);
+  color: mat.get-color-from-palette($worldbuilder-primary, 900);
+}
+
