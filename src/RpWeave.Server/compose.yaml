@@ -4,6 +4,11 @@
     build:
       context: .
       dockerfile: RpWeave.Server.Api/Dockerfile
+    environment:
+      - Authentication__TokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
+      - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
+      - Authentication__Issuer=http://localhost:8080
+      - Authentication__Audience=rp-weave-api
     ports:
       - "5000:8080"
 

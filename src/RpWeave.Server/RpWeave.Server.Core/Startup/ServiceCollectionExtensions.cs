@@ -5,11 +5,12 @@ namespace RpWeave.Server.Core.Startup;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAttributedServices(this IServiceCollection services)
+    public static IServiceCollection AddAttributedServices(
+        this IServiceCollection services,
+        Assembly[] assemblies)
     {
-        var assembly = Assembly.GetCallingAssembly();
-
-        var types = assembly.GetTypes()
+        var types = assemblies
+            .SelectMany(x => x.GetTypes())
             .Where(t => !t.IsAbstract && !t.IsInterface);
 
         foreach (var type in types)

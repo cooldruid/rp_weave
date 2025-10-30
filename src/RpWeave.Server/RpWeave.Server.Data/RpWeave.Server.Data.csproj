@@ -10,4 +10,8 @@
       <PackageReference Include="AspNetCore.Identity.Mongo" Version="10.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RpWeave.Server.Core\RpWeave.Server.Core.csproj" />
+    </ItemGroup>
+
 </Project>

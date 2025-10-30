@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using RpWeave.Server.Api.Constants;
 using RpWeave.Server.Core.Results;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Data.Entities;
@@ -18,9 +19,9 @@ public class RegisterHandler(UserManager<AppUser> userManager)
         var creationResult = await userManager.CreateAsync(user, request.Password);
         
         if(!creationResult.Succeeded)
-            return Result.Failure("test", string.Join("\n", creationResult.Errors.Select(x => x.Description)));
+            return Result.Failure(ErrorCodes.UserInput, string.Join("\n", creationResult.Errors.Select(x => x.Description)));
         
-        await userManager.AddToRoleAsync(user, "Admin");
+        await userManager.AddToRoleAsync(user, UserRoleConstants.Admin);
         
         return Result.Success();
     }
