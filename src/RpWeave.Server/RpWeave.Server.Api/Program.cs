@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using RpWeave.Server.Api.Constants;
 using RpWeave.Server.Api.Extensions;
+using RpWeave.Server.Api.Middleware;
 using RpWeave.Server.Api.Seeders;
 using RpWeave.Server.Api.Settings;
 using RpWeave.Server.Core.Startup;
@@ -19,8 +20,7 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerDocument();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -40,16 +40,17 @@ builder.Services.AddRpwIdentityProvider()
     .AddRpwAuthorization();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-app.MapOpenApi();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.UseOpenApi();
+app.UseSwaggerUi();
 app.UseExceptionHandler();
 
 app.Run();

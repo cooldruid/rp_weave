@@ -1,5 +1,6 @@
 
 @use '@angular/material' as mat;
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 @include mat.core();
 
@@ -113,12 +114,16 @@ $worldbuilder-dark-theme: mat.define-dark-theme((
     )
   )));
 
-    background-color: #121212;      // main app background
+    background-color: #2e2e2e;      // main app background
     color: #E0E0E0;                 // default text
 
-  .mat-card, .mat-dialog-container, .mat-snack-bar-container {
-    background-color: #303030;      // surfaces like cards, dialogs, snackbars
+  .mat-mdc-card, .mat-dialog-container, .mat-snack-bar-container {
+    background-color: #505050;      // surfaces like cards, dialogs, snackbars
     color: #E0E0E0;                 // text on these surfaces
+  }
+
+  mat-label {
+    color: #E0E0E0
   }
 
   // Optional: hover/interactive states

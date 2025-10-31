@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
-public class GlobalExceptionHandler(RequestDelegate next) : IExceptionHandler
+namespace RpWeave.Server.Api.Middleware;
+
+public class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -10,12 +13,17 @@ public class GlobalExceptionHandler(RequestDelegate next) : IExceptionHandler
     {
         Log.Error(exception, "Exception occurred during execution of {Path}: {Message}", httpContext.Request.Path,
             exception.Message);
+        
+        var problemDetails = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Server error"
+        };
+        
+        httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-        await httpContext.Response.WriteAsync(
-            "Unexpected error occurred. Try again later or look into logs for more information.", 
-            cancellationToken);
+        await httpContext.Response
+            .WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;
     }
