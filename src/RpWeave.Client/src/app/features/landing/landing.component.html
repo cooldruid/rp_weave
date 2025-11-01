@@ -1,0 +1,13 @@
+<div class="d-flex flex-wrap flex-lg-nowrap vh-100 justify-content-center align-items-center p-2 mx-lg-4">
+    <div class="col-12 col-lg-7">
+        <span class="display-3">Welcome to RP Weave!</span>
+        <p style="font-size: 20px;">The open-source worldbuilding companion that your party needs</p>
+    </div>
+    @if(showDivider) {
+        <mat-divider [vertical]="true" class="h-25 mx-md-5 w-100" style="border-width: 2px; border-color: white;"></mat-divider>
+    }
+    <div class="col-12 col-lg-3">
+        <button mat-flat-button color="primary" class="w-100 mb-3">Sign up</button>
+        <button mat-flat-button class="w-100" (click)="navigateToLogin()">Log in</button>
+    </div>
+</div>

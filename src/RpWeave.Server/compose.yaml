@@ -4,5 +4,30 @@
     build:
       context: .
       dockerfile: RpWeave.Server.Api/Dockerfile
+    environment:
+      - Authentication__TokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
+      - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
+      - Authentication__Issuer=http://localhost:8080
+      - Authentication__Audience=rp-weave-api
     ports:
-      - "5000:80"
+      - "5000:8080"
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodbdata:/data/db
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+    depends_on:
+      - mongo
+
+volumes:
+  mongodbdata:

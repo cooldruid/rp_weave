@@ -1,66 +1,58 @@
-using Microsoft.AspNetCore.Authentication;
+using System.Text;
+using System.Text.Json;
+using AspNetCore.Identity.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Abstractions;
-using Microsoft.Identity.Web.Resource;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
+using RpWeave.Server.Api.Constants;
+using RpWeave.Server.Api.Extensions;
+using RpWeave.Server.Api.Middleware;
+using RpWeave.Server.Api.Seeders;
+using RpWeave.Server.Api.Settings;
+using RpWeave.Server.Core.Startup;
+using RpWeave.Server.Data.Entities;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerDocument();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAttributedServices(
+    [
+        typeof(Program).Assembly,
+        typeof(RpWeave.Server.Data.AssemblyMarker).Assembly
+    ]);
+builder.Services.AddHostedService<IdentitySeeder>();
+
+builder.Services.AddRpwIdentityProvider()
+    .AddRpwAuthentication(builder.Configuration)
+    .AddRpwAuthorization();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-//app.UseHttpsRedirection();
-
-// Serve static files from wwwroot
-app.UseStaticFiles();
-app.Urls.Add("http://0.0.0.0:80");
-
-// Fallback for SPA routes (everything that isn't an API)
-app.Use(async (context, next) =>
-{
-    await next();
-
-    if (context.Response.StatusCode == 404 &&
-        !Path.HasExtension(context.Request.Path.Value) &&
-        (!context.Request.Path.Value?.StartsWith("/api") ?? false))
-    {
-        context.Request.Path = "/index.html";
-        await next();
-    }
-});
-
-var scopeRequiredByApi = app.Configuration["AzureAd:Scopes"] ?? "";
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.UseOpenApi();
+app.UseSwaggerUi();
+app.UseExceptionHandler();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
