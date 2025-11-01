@@ -9,6 +9,7 @@ public class RefreshTokenController(RefreshTokenHandler handler) : ControllerBas
 {
     [HttpPost("/api/user/refresh-token")]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(RefreshTokenResponse), 200)]
     public async Task<IActionResult> RefreshTokenAsync()
     {
         var result = await handler.HandleAsync(HttpContext);

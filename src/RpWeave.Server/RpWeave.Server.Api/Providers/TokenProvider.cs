@@ -26,7 +26,7 @@ public class TokenProvider(AuthenticationSettings authenticationSettings)
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var expirationDate = DateTime.UtcNow.AddHours(6);
+        var expirationDate = DateTime.UtcNow.AddHours(1);
 
         var jwtSecurityToken = new JwtSecurityToken(
                       authenticationSettings.Issuer,

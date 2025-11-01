@@ -44,6 +44,8 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();

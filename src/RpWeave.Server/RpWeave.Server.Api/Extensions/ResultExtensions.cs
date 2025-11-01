@@ -11,8 +11,16 @@ public static class ResultExtensions
         if (result.IsFailure)
             return result.ToStatusCodeFromErrorCode();
 
-        if (result is ValueResult<object> valueResult)
-            return new OkObjectResult(valueResult.Value);
+        var type = result.GetType();
+
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ValueResult<>))
+        {
+            // Use reflection to get the Value property
+            var valueProperty = type.GetProperty("Value");
+            var value = valueProperty?.GetValue(result);
+
+            return new OkObjectResult(value);
+        }
         
         return new AcceptedResult();
     }
