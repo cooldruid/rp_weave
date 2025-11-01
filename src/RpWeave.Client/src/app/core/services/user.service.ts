@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { jwtDecode } from "jwt-decode";
+import { BehaviorSubject } from "rxjs";
 
 export type User = {
     id: string;
@@ -9,11 +10,19 @@ export type User = {
 
 @Injectable({providedIn: 'root'})
 export class UserService {
-    private _user: User | undefined;
+    private _user$ = new BehaviorSubject<User | undefined>(undefined);
+    user$ = this._user$.asObservable();
+    
     private _accessToken: string | undefined;
 
+    constructor() {
+        // Restore access token from localStorage on app start
+        const token = localStorage.getItem('accessToken');
+        if (token) this.loadUser(token);
+    }
+
     get user() {
-        return this._user;
+        return this._user$.value;
     }
 
     get accessToken() {
@@ -22,11 +31,13 @@ export class UserService {
 
     loadUser(token: string) {
         this._accessToken = token;
-        this._user = jwtDecode<User>(token);
+        localStorage.setItem('accessToken', token);
+        this._user$.next(jwtDecode<User>(token));
     }
 
     clearUser() {
-        this._user = undefined;
+        this._user$.next(undefined);
         this._accessToken = undefined;
+        localStorage.removeItem('accessToken');
     }
 }

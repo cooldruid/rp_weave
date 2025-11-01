@@ -5,10 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { LoginService } from './login.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -32,9 +31,7 @@ export class LoginComponent {
     try {
       await this.loginService.loginAsync(this.username, this.password);
 
-      // navigate to dashboard or something
-      console.log(this.userService.accessToken);
-      console.log(this.userService.user);
+      this.router.navigate(['dashboard'])
     }
     catch(error: any) {
       this.snackBar.open(error.error, 'OK');
