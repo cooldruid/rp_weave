@@ -1,6 +1,7 @@
 ﻿services:
   rpweave.server.api:
     image: rpweave.server.api
+    user: root
     build:
       context: .
       dockerfile: RpWeave.Server.Api/Dockerfile
@@ -29,5 +30,22 @@
     depends_on:
       - mongo
 
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all # alternatively, use `count: all` for all GPUs
+              capabilities: [gpu]
+
 volumes:
   mongodbdata:
+  ollama:

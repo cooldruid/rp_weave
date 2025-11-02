@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\RpWeave.Server.Core\RpWeave.Server.Core.csproj" />
       <ProjectReference Include="..\RpWeave.Server.Data\RpWeave.Server.Data.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Mcp\RpWeave.Server.Mcp.csproj" />
     </ItemGroup>
 
 </Project>

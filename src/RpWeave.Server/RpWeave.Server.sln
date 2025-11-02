@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Core", "RpWe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Data", "RpWeave.Server.Data\RpWeave.Server.Data.csproj", "{0A15A4D8-DF05-42B0-AE50-A86214612486}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Mcp", "RpWeave.Server.Mcp\RpWeave.Server.Mcp.csproj", "{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,8 +59,22 @@ Global
 		{0A15A4D8-DF05-42B0-AE50-A86214612486}.Release|x64.Build.0 = Release|Any CPU
 		{0A15A4D8-DF05-42B0-AE50-A86214612486}.Release|x86.ActiveCfg = Release|Any CPU
 		{0A15A4D8-DF05-42B0-AE50-A86214612486}.Release|x86.Build.0 = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|x64.Build.0 = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC74BC4D-9CD1-40AD-BC2F-8BCA4FA4F809}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

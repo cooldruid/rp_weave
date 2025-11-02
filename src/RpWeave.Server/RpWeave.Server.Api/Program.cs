@@ -42,6 +42,10 @@ builder.Services.AddRpwIdentityProvider()
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// builder.Services.AddMcpServer()
+//     .WithStdioServerTransport()
+//     .WithToolsFromAssembly();
+
 var app = builder.Build();
 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
