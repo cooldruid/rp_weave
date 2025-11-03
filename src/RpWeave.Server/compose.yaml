@@ -10,6 +10,8 @@
       - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__Issuer=http://localhost:8080
       - Authentication__Audience=rp-weave-api
+    volumes:
+      - ./testResults:/home/test
     ports:
       - "5000:8080"
 
@@ -38,6 +40,8 @@
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
+    environment:
+      - OLLAMA_DEBUG=1
     deploy:
       resources:
         reservations:

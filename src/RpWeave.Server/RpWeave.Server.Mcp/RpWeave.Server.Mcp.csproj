@@ -25,4 +25,14 @@
       <PackageReference Include="PdfPig" Version="0.1.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RpWeave.Server.Core\RpWeave.Server.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Serilog">
+        <HintPath>..\..\..\..\..\.nuget\packages\serilog\4.3.0\lib\net9.0\Serilog.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

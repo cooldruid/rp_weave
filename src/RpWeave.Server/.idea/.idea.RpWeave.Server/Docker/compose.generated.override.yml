@@ -24,14 +24,14 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "rpweave.server.api:dev"
     ports:
-    - "127.0.0.1:57004:57000"
-    - "127.0.0.1:57204:57200"
-    - "127.0.0.1:57404:57400"
+    - "127.0.0.1:57017:57000"
+    - "127.0.0.1:57217:57200"
+    - "127.0.0.1:57417:57400"
     volumes:
     - "/home/vasil/Projects/rp_weave/src/RpWeave.Server/RpWeave.Server.Api:/app:rw"
     - "/home/vasil/Projects/rp_weave/src/RpWeave.Server:/src:rw"
     - "/home/vasil/.nuget/packages:/root/.nuget/packages"
     - "/home/vasil/.local/share/JetBrains/RiderRemoteDebugger/2024.3.7/Linux64:/opt/JetBrains/RiderDebuggerTools"
     - "/home/vasil/Programs/Rider/JetBrains Rider-2024.3.7/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/home/vasil/.cache/JetBrains/Rider2024.3/log/DebuggerWorker/JetBrains.Debugger.Worker.2025_11_02_23_48_31:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/home/vasil/.cache/JetBrains/Rider2024.3/log/DebuggerWorker/JetBrains.Debugger.Worker.2025_11_03_14_41_21:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

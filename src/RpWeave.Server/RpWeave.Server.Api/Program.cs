@@ -12,6 +12,7 @@ using RpWeave.Server.Api.Seeders;
 using RpWeave.Server.Api.Settings;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Data.Entities;
+using RpWeave.Server.Mcp;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -31,7 +32,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAttributedServices(
     [
         typeof(Program).Assembly,
-        typeof(RpWeave.Server.Data.AssemblyMarker).Assembly
+        typeof(RpWeave.Server.Data.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Mcp.AssemblyMarker).Assembly,
     ]);
 builder.Services.AddHostedService<IdentitySeeder>();
 
@@ -47,6 +49,9 @@ builder.Services.AddProblemDetails();
 //     .WithToolsFromAssembly();
 
 var app = builder.Build();
+
+// this is bad bad bad, but will do for now
+ServiceProviderInstance.Initialize(app.Services);
 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
