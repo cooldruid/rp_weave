@@ -1,19 +1,12 @@
-using System.Text;
 using System.Text.Json;
-using AspNetCore.Identity.Mongo;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson;
-using RpWeave.Server.Api.Constants;
 using RpWeave.Server.Api.Extensions;
 using RpWeave.Server.Api.Middleware;
 using RpWeave.Server.Api.Seeders;
-using RpWeave.Server.Api.Settings;
 using RpWeave.Server.Core.Startup;
-using RpWeave.Server.Data.Entities;
+using RpWeave.Server.Integrations.Ollama.Extensions;
 using RpWeave.Server.Mcp;
 using Serilog;
+using AssemblyMarker = RpWeave.Server.Data.AssemblyMarker;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -32,8 +25,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAttributedServices(
     [
         typeof(Program).Assembly,
-        typeof(RpWeave.Server.Data.AssemblyMarker).Assembly,
+        typeof(AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Mcp.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Orchestrations.BookBreakdown.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Integrations.Ollama.AssemblyMarker).Assembly,
     ]);
 builder.Services.AddHostedService<IdentitySeeder>();
 
@@ -44,9 +39,7 @@ builder.Services.AddRpwIdentityProvider()
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-// builder.Services.AddMcpServer()
-//     .WithStdioServerTransport()
-//     .WithToolsFromAssembly();
+builder.Services.AddOllamaIntegration(builder.Configuration);
 
 var app = builder.Build();
 

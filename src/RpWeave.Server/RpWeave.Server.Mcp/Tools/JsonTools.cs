@@ -3,10 +3,9 @@ using ModelContextProtocol.Server;
 
 namespace RpWeave.Server.Mcp.Tools;
 
-[McpServerToolType]
 public static class JsonTools
 {
-    [McpServerTool, Description("Stores the given json string as a file with the given file name. Previous content is overwritten.")]
+    [Description("Stores the given json string as a file with the given file name. Previous content is overwritten.")]
     public static async Task WriteJsonToFileAsync(
         [Description("The run id used to collerate outputs into a single run context")] string runId,
         [Description("The file name for the json")] string fileName, 
@@ -18,7 +17,7 @@ public static class JsonTools
         await File.WriteAllTextAsync(path, json);
     }
     
-    [McpServerTool, Description("Reads json content from a file with a given name. Returns an empty string if file does not exist.")]
+    [Description("Reads json content from a file with a given name. Returns an empty string if file does not exist.")]
     public static async Task<string> ReadJsonFromFileAsync(
         [Description("he run id used to collerate outputs into a single run context")] string runId,
         [Description("The file name of the json")] string fileName)
@@ -27,7 +26,7 @@ public static class JsonTools
         return await File.ReadAllTextAsync(path);
     }
     
-    [McpServerTool, Description("Lists all already created json files for a given run id. Returns a comma separated list with all file names.")]
+    [Description("Lists all already created json files for a given run id. Returns a comma separated list with all file names.")]
     public static string ListAllJsonFilesAsync(
         [Description("he run id used to collerate outputs into a single run context")] string runId)
     {

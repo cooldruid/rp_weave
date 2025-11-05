@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using RpWeave.Server.Mcp;
 using RpWeave.Server.Mcp.Orchestrators;
 using RpWeave.Server.Mcp.Tools;
+using RpWeave.Server.Orchestrations.BookBreakdown;
 
 namespace RpWeave.Server.Api;
 
 [ApiController]
-public class TestController(TtrpgBookBreakdownOrchestrator orchestrator) : ControllerBase
+public class TestController(BookBreakdownOrchestrator bookBreakdownOrchestrator) : ControllerBase
 {
     [HttpGet("api/test/extractpdf")]
     [AllowAnonymous]
@@ -29,6 +30,7 @@ public class TestController(TtrpgBookBreakdownOrchestrator orchestrator) : Contr
     [AllowAnonymous]
     public async Task<IActionResult> Orchestrate(string fileLocation)
     {
-        return Ok(await orchestrator.OrchestrateAsync(fileLocation));
+        var result = await bookBreakdownOrchestrator.ProcessBookBreakdown(fileLocation);
+        return Ok(result.OrderBy(x => x.Order));
     }
 }

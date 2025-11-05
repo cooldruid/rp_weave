@@ -29,7 +29,9 @@
     <ItemGroup>
       <ProjectReference Include="..\RpWeave.Server.Core\RpWeave.Server.Core.csproj" />
       <ProjectReference Include="..\RpWeave.Server.Data\RpWeave.Server.Data.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Integrations.Ollama\RpWeave.Server.Integrations.Ollama.csproj" />
       <ProjectReference Include="..\RpWeave.Server.Mcp\RpWeave.Server.Mcp.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Orchestrations.BookBreakdown\RpWeave.Server.Orchestrations.BookBreakdown.csproj" />
     </ItemGroup>
 
 </Project>
