@@ -50,6 +50,12 @@
               count: all # alternatively, use `count: all` for all GPUs
               capabilities: [gpu]
 
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - 6333:6333
+
 volumes:
   mongodbdata:
   ollama:

@@ -29,6 +29,7 @@ builder.Services.AddAttributedServices(
         typeof(RpWeave.Server.Mcp.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Orchestrations.BookBreakdown.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Ollama.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Integrations.Qdrant.AssemblyMarker).Assembly
     ]);
 builder.Services.AddHostedService<IdentitySeeder>();
 

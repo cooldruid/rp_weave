@@ -23,36 +23,36 @@ public class TtrpgBookBreakdownOrchestrator
                            """;
         
         var userPrompt = $$"""
-                           Task: Extract named NPCs from the Dungeons & Dragons module page.
+                           Task: Extract named NPCs from the TTRPG module extract.
                            
-                           You are given the text of a page of a D&D module. This page may not be the first page.
+                           You are given the text of an extract of a TTRPG (Dungeons & Dragons, Pathfinder, etc.) module. Perform the following flow in order:
                            
-                           Look for NPC descriptions inside the text of the page.
-                           For each named individual NPC (ignore unnamed monsters or generic enemies) you find:
-                           - Check if the JSON for this NPC exists using the following tool ListAllJsonFilesAsync(runId: "{{runId}}"). Match the NPC you found with the existing files by the NPC name:
-                             - If it already exists, read the content using ReadJsonFromFileAsync(runId: "{{runId}}", fileName: <filename>) and evaluate if the information you gathered is there and sufficient
-                                - If your information isn't there, enrich its description by adding or modifying the current value based on the data you find and store it using WriteJsonToFileAsync(runId: "{{runId}}", fileName: <filename>, content: <json>).
-                                - If your information is there and you don't believe it needs a change, do nothing and continue with the next NPC
-                           - If it does not exist, create a JSON object:
+                           1. Check if any mention or description of named NPCs exist. Ignore unnamed characters and monsters.
+                             1.2. If none are present, do nothing.
+                             1.3. If at least one is present, continue with the following steps and perform them for each NPC you have found.
+                           2. Check if the JSON for this NPC exists using the following tool ListAllJsonFilesAsync(runId: "{{runId}}"). Match the NPC you found with the existing files by the NPC name:
+                             2.1. If it already exists, read the content using ReadJsonFromFileAsync(runId: "{{runId}}", fileName: <filename>) and evaluate if the information you gathered is there and sufficient
+                               2.1.1. If the information you found isn't represented, enrich the entry by appending to the current values based on the data you find and store it using WriteJsonToFileAsync(runId: "{{runId}}", fileName: <filename>, content: <json>).
+                                        Do not change the JSON schema.
+                               2.1.2. If your information is there and you don't believe it needs a change, do nothing and continue with the next NPC
+                             2.2. If it does not exist, create a JSON object:
                              {
                                "name": string,
-                               "description": string
+                               "appearance": string,
+                               "personality": string
                              }
-                             - name = the character's name from the module
-                             - description = a short summary of appearance and personality (no stats)
-                             - leave fields blank if unsure
+                               - name = the character's name from the module
+                               - appearance = a short summary of appearance (no stats)
+                               - personality = a short summary of personality (no stats)
+                               - leave fields blank if unsure
                            
                            For each JSON object:
                            1. The filename must be PascalCase(name) + ".json"
                            2. Call the tool WriteJsonToFileAsync(runId: "{{runId}}", fileName: <filename>, content: <json>)
                            3. Do NOT print or describe the JSON — only invoke the tool.
-                           4. After writing one file, move immediately to the next NPC.
-                           
-                           If there are no named NPCs, do nothing.
-                           When you are finished with the NPC, move on to the next NPC you find if there are any.
                            
                            ---
-                           BELOW BEGINS MODULE PAGE TEXT:
+                           BELOW BEGINS MODULE EXTRACT:
                            """;
 
         var response = "";
