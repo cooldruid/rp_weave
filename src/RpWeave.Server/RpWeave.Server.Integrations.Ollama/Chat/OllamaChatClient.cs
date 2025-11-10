@@ -28,6 +28,7 @@ public class OllamaChatClient(IChatClient chatClient)
 
             var response = "";
             
+            Console.WriteLine("\n");
             Log.Information("Thinking:");
             await foreach (var token in chatClient.GetStreamingResponseAsync([
                                new ChatMessage(ChatRole.System, request.SystemPrompt),

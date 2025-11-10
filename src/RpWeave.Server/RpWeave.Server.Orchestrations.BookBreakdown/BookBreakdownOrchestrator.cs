@@ -15,7 +15,7 @@ public class BookBreakdownOrchestrator(
     OllamaChatClient chatClient,
     VectorDbClient vectorDbClient)
 {
-    public async Task<List<PdfChunk>> ProcessBookBreakdown(string filePath)
+    public async Task<string> ProcessBookBreakdown(string filePath)
     {
         var runId = Guid.NewGuid().ToString();
         var pdfChunker = new PdfChunkingProcessor();
@@ -38,7 +38,12 @@ public class BookBreakdownOrchestrator(
         //
         #endregion
 
-        var collectionName = Guid.NewGuid().ToString();
+        foreach (var chunk in chunks)
+        {
+            chunk.Content = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter}\n");
+        }
+
+        var collectionName = $"{Path.GetFileNameWithoutExtension(filePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
         await vectorDbClient.CreateCollectionAsync(collectionName);
 
         var vectorsList = new List<(PdfChunk, float[])>();
@@ -50,12 +55,6 @@ public class BookBreakdownOrchestrator(
                 new VectorDbUpsertRequest(collectionName, vector, $"{chunk.Chapter} > {chunk.Subchapter}",
                     chunk.Content));
         }
-
-        var searchVector = await embedClient.GenerateEmbeddingsAsync("Who is Cailyassa?");
-
-        var response = await vectorDbClient.SearchAsync(new VectorDbSearchRequest(
-            collectionName,
-            searchVector));
 
         // foreach (var chunk in chunks)
         // {
@@ -69,6 +68,6 @@ public class BookBreakdownOrchestrator(
         
         
         
-        return chunks;
+        return collectionName;
     }
 }

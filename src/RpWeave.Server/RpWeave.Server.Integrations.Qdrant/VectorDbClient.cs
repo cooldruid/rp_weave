@@ -21,14 +21,18 @@ public class VectorDbClient
 
     public async Task CreateCollectionAsync(string collectionName)
     {
-        await qdrantClient.CreateCollectionAsync(collectionName);
+        await qdrantClient.CreateCollectionAsync(collectionName, new VectorParams()
+        {
+            Size = 1024,
+            Distance = Distance.Cosine
+        });
     }
 
     public async Task UpsertAsync(VectorDbUpsertRequest request)
     {
         var pointStruct = new PointStruct
         {
-            Id = new PointId(1),
+            Id = new PointId(Guid.NewGuid()),
             Vectors = request.Vector,
             Payload =
             {
@@ -48,7 +52,7 @@ public class VectorDbClient
         var points = await qdrantClient.SearchAsync(
             request.CollectionName,
             request.Vector,
-            limit: 5);
+            limit: 3);
         
         var resultElements = new List<VectorDbSearchResponseElement>();
         foreach (var point in points)

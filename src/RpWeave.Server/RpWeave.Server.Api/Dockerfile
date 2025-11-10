@@ -20,4 +20,8 @@ RUN dotnet publish "RpWeave.Server.Api.csproj" -c $BUILD_CONFIGURATION -o /app/p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Install Tesseract
+RUN apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng libtesseract-dev && rm -rf /var/lib/apt/lists/*
+
 ENTRYPOINT ["dotnet", "RpWeave.Server.Api.dll"]
