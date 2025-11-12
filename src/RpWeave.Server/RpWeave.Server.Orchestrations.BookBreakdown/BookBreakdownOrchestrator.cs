@@ -18,55 +18,26 @@ public class BookBreakdownOrchestrator(
     public async Task<string> ProcessBookBreakdown(string filePath)
     {
         var runId = Guid.NewGuid().ToString();
-        var pdfChunker = new PdfChunkingProcessor();
+        var pdfChunker = new PdfChunkModule();
         var chunks = pdfChunker.ChunkPdf(filePath);
-        
-        #region hardcoded stuff
-        // HARDCODED STUFF TO MOVE ON
-        
-        var chunk0 = chunks.First(x => x.Order == 0);
-        var chunk1 = chunks.First(x => x.Order == 1);
-        var chunk2 = chunks.First(x => x.Order == 2);
-
-        chunk0.Chapter = "Introduction";
-        chunk1.Chapter = "Introduction";
-
-        chunk1.Content += " " + chunk2.Content;
-
-        chunks.Remove(chunk2);
-        
-        //
-        #endregion
 
         foreach (var chunk in chunks)
         {
-            chunk.Content = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter}\n");
+            chunk.Content = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}\n");
         }
-
+        
         var collectionName = $"{Path.GetFileNameWithoutExtension(filePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
         await vectorDbClient.CreateCollectionAsync(collectionName);
-
+        
         var vectorsList = new List<(PdfChunk, float[])>();
         foreach (var chunk in chunks)
         {
             var vector = await embedClient.GenerateEmbeddingsAsync(chunk.Content);
-
+        
             await vectorDbClient.UpsertAsync(
                 new VectorDbUpsertRequest(collectionName, vector, $"{chunk.Chapter} > {chunk.Subchapter}",
                     chunk.Content));
         }
-
-        // foreach (var chunk in chunks)
-        // {
-        //     var request = new OllamaChatRequest(
-        //         BookBreakdownPrompts.SystemPrompt,
-        //         BookBreakdownPrompts.UserPrompt(runId, chunk.Content),
-        //         [JsonTools.ListAllJsonFilesAsync, JsonTools.ReadJsonFromFileAsync, JsonTools.WriteJsonToFileAsync]);
-        //     
-        //     await chatClient.SendAsync(request);
-        // }
-        
-        
         
         return collectionName;
     }

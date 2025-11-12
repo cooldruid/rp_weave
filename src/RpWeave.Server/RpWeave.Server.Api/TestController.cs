@@ -8,6 +8,7 @@ using RpWeave.Server.Mcp;
 using RpWeave.Server.Mcp.Orchestrators;
 using RpWeave.Server.Mcp.Tools;
 using RpWeave.Server.Orchestrations.BookBreakdown;
+using RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
 
 namespace RpWeave.Server.Api;
 
@@ -17,20 +18,11 @@ public class TestController(
     OllamaEmbedClient embedClient,
     VectorDbClient vectorDbClient) : ControllerBase
 {
-    private static string CollectionName = "";
-    
     [HttpGet("api/test/extractpdf")]
     [AllowAnonymous]
-    public IActionResult ExtractPdf()
+    public IActionResult ExtractPdf(string filePath)
     {
-        return Ok();
-    }
-    
-    [HttpGet("api/test/prompt/broken")]
-    [AllowAnonymous]
-    public async Task<IActionResult> ExtractPdf(string prompt)
-    {
-        var thing = new OllamaClientWithFunctions();
+        //new PdfProcessor().Process(filePath);
         return Ok();
     }
     
@@ -38,19 +30,19 @@ public class TestController(
     [AllowAnonymous]
     public async Task<IActionResult> Orchestrate(string fileLocation)
     {
-        CollectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(fileLocation);
+        var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(fileLocation);
         
-        return Ok();
+        return Ok(collectionName);
     }
 
     [HttpGet("api/test/queryvector")]
     [AllowAnonymous]
-    public async Task<IActionResult> QueryVector(string query)
+    public async Task<IActionResult> QueryVector(string collectionName, string query)
     {
         var searchVector = await embedClient.GenerateEmbeddingsAsync(query);
 
         var response = await vectorDbClient.SearchAsync(new VectorDbSearchRequest(
-            string.IsNullOrEmpty(CollectionName) ? "test1" : CollectionName,
+            collectionName,
             searchVector));
         
         return Ok(response);

@@ -9,11 +9,11 @@ namespace RpWeave.Server.Api.Features.Ai.Prompt;
 [ScopedService]
 public class PromptHandler(VectorDbClient vectorDbClient, OllamaChatClient ollamaChatClient, OllamaEmbedClient ollamaEmbedClient)
 {
-    public async Task<string> HandleAsync(string query)
+    public async Task<string> HandleAsync(string collectionName, string query)
     {
         var vector = await ollamaEmbedClient.GenerateEmbeddingsAsync(query);
 
-        var queryResults = await vectorDbClient.SearchAsync(new VectorDbSearchRequest("test1", vector));
+        var queryResults = await vectorDbClient.SearchAsync(new VectorDbSearchRequest(collectionName, vector));
         
         var prompt = $"""
                       You are a Dungeon Master’s assistant. Use only the information provided to answer the user’s question.
@@ -24,7 +24,7 @@ public class PromptHandler(VectorDbClient vectorDbClient, OllamaChatClient ollam
                       QUESTION:
                       {query}
 
-                      If the answer is not contained in the context, say "I don't have that information."
+                      If the answer is not contained in the context, give a best guess, but also give an explanation in the end of your response about what was missing and why you guessed that.
                       """;
 
         var response = await ollamaChatClient.SendAsync(new OllamaChatRequest("", prompt, []));

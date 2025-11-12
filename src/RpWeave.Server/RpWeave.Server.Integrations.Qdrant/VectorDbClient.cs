@@ -16,7 +16,7 @@ public class VectorDbClient
     
     public VectorDbClient()
     {
-        qdrantClient = new QdrantClient("qdrant", 6334, https: false);
+        qdrantClient = new QdrantClient("qdrant", https: false);
     }
 
     public async Task CreateCollectionAsync(string collectionName)
@@ -52,7 +52,7 @@ public class VectorDbClient
         var points = await qdrantClient.SearchAsync(
             request.CollectionName,
             request.Vector,
-            limit: 3);
+            limit: 8);
         
         var resultElements = new List<VectorDbSearchResponseElement>();
         foreach (var point in points)
