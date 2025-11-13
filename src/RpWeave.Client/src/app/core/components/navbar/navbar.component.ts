@@ -3,12 +3,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserService } from '../../services/user.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [MatToolbarModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })

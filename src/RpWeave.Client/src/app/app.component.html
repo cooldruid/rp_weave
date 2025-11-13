@@ -1,2 +1,28 @@
-<app-navbar></app-navbar>
-<router-outlet></router-outlet>
+@if(showNavbar) {
+    <mat-toolbar color="tertiary">
+        <div class="d-flex w-100 justify-content-between">
+            <span>RP Weave</span>
+            <button mat-button class="font-monospace">
+                <mat-icon fontIcon="person"></mat-icon>
+                {{username}}
+            </button>
+        </div>
+            
+    </mat-toolbar>
+    <mat-sidenav-container style="height: calc(100% - 64px)">
+        <mat-sidenav #sidenav mode="side" opened style="width: 180px">
+            <mat-action-list class="p-0">
+                <button mat-list-item (click)="navigateToCampaigns()">Campaigns</button>
+            </mat-action-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <div class="m-2">
+                <router-outlet></router-outlet>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+}
+@else {
+    <router-outlet></router-outlet>
+}

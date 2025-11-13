@@ -3,10 +3,14 @@ import { LandingComponent } from './features/landing/landing.component';
 import { LoginComponent } from './features/login/login.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
+import { SignupComponent } from './features/signup/signup.component';
+import { CampaignsComponent } from './features/campaigns/campaigns.component';
 
 export const routes: Routes = [
     { path: 'landing', component: LandingComponent, title: 'RP Weave' },
     { path: 'login', component: LoginComponent, title: 'Log in to RP Weave' },
+    { path: 'signup', component: SignupComponent, title: 'Sign up to RP Weave' },
+    { path: 'campaigns', component: CampaignsComponent, title: 'RP Weave', canActivate: [authGuard] },
     { path: 'dashboard', component: DashboardComponent, title: 'RP Weave', canActivate: [authGuard] },
     { path: '', pathMatch: 'full', redirectTo: 'landing'}
 ];

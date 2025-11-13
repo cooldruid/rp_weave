@@ -31,7 +31,7 @@ export class LoginComponent {
     try {
       await this.loginService.loginAsync(this.username, this.password);
 
-      this.router.navigate(['dashboard'])
+      this.router.navigate(['campaigns'])
     }
     catch(error: any) {
       this.snackBar.open(error.error, 'OK');
