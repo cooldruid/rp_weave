@@ -12,6 +12,7 @@
       - Authentication__Audience=rp-weave-api
     volumes:
       - ./testResults:/home/test
+      - uploads:/srv/rpweave/uploads
     ports:
       - "5000:8080"
 
@@ -59,3 +60,4 @@
 volumes:
   mongodbdata:
   ollama:
+  uploads:

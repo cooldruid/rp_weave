@@ -12,12 +12,10 @@ namespace RpWeave.Server.Orchestrations.BookBreakdown;
 [ScopedService]
 public class BookBreakdownOrchestrator(
     OllamaEmbedClient embedClient,
-    OllamaChatClient chatClient,
     VectorDbClient vectorDbClient)
 {
     public async Task<string> ProcessBookBreakdown(string filePath)
     {
-        var runId = Guid.NewGuid().ToString();
         var pdfChunker = new PdfChunkModule();
         var chunks = pdfChunker.ChunkPdf(filePath);
 
@@ -29,7 +27,6 @@ public class BookBreakdownOrchestrator(
         var collectionName = $"{Path.GetFileNameWithoutExtension(filePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
         await vectorDbClient.CreateCollectionAsync(collectionName);
         
-        var vectorsList = new List<(PdfChunk, float[])>();
         foreach (var chunk in chunks)
         {
             var vector = await embedClient.GenerateEmbeddingsAsync(chunk.Content);
