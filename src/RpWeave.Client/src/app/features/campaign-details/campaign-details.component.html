@@ -1,0 +1,15 @@
+@if(campaign) {
+    <h2>{{campaign.name}}</h2>
+
+    <mat-list>
+        <mat-list-item>{{campaign.description}}</mat-list-item>
+        <mat-list-item>Has uploaded PDF: {{campaign.pdfPath ? 'yes' : 'no'}}</mat-list-item>
+        @if(campaign.pdfPath) {
+            <mat-list-item>PDF path: {{campaign.pdfPath}}</mat-list-item>
+        }
+        <mat-list-item>Has mapped vectors: {{campaign.vectorCollectionName ? 'yes' : 'no'}}</mat-list-item>
+        @if(campaign.vectorCollectionName) {
+            <mat-list-item>Vector collection name: {{campaign.vectorCollectionName}}</mat-list-item>
+        }
+    </mat-list>
+}

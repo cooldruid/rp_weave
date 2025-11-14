@@ -1,7 +1,9 @@
 <div class="d-flex flex-wrap">
     @for(campaign of campaigns; track campaign) {
-        <div class="col-12 col-lg-4 col-xxl-3">
-            <mat-card appearance="outlined" class="mb-2 mx-2">
+        <div class="col-12 col-lg-4 col-xxl-3"
+            style="cursor: pointer;" 
+            (click)="onCampaignClick(campaign.id)">
+            <mat-card appearance="outlined" class="m-2" >
                 <mat-card-header class="mb-2">
                     <mat-card-title>{{campaign.name}}</mat-card-title>
                 </mat-card-header>
@@ -9,13 +11,13 @@
                     <p>{{campaign.description}}</p>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-mini-fab-button class="p-0">
-                        <mat-icon fontIcon="delete" color="warn" class=""></mat-icon>
-                    </button>
-                    <button matButton>SHARE</button>
+                    <div class="d-flex justify-content-end w-100">
+                        <button matIconButton click-stop-propagation (click)="onCampaignDelete()">
+                            <mat-icon color="warn">delete</mat-icon>
+                        </button>
+                    </div>
                 </mat-card-actions>
             </mat-card>
         </div>
     }
-
 </div>
