@@ -8,11 +8,10 @@ import { MatIconModule } from "@angular/material/icon";
 import {MatSidenavModule} from '@angular/material/sidenav';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+    selector: 'app-navbar',
+    imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule],
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
   showNavbar: boolean = true;

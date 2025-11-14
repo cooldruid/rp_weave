@@ -9,11 +9,10 @@ import { Subscription } from 'rxjs';
 import { UserService } from './core/services/user.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [MatListModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, RouterModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [MatListModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, RouterModule],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   showNavbar: boolean = true;

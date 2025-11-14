@@ -6,11 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
-  selector: 'app-campaigns',
-  standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatIconModule],
-  templateUrl: './campaigns.component.html',
-  styleUrl: './campaigns.component.scss'
+    selector: 'app-campaigns',
+    imports: [MatCardModule, MatButtonModule, MatIconModule],
+    templateUrl: './campaigns.component.html',
+    styleUrl: './campaigns.component.scss'
 })
 export class CampaignsComponent {
   protected campaigns: CampaignModel[] = [];

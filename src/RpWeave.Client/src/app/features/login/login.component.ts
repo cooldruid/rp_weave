@@ -10,11 +10,10 @@ import { UserService } from '../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [MatCardModule, MatInputModule, MatFormFieldModule, MatButtonModule, FormsModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [MatCardModule, MatInputModule, MatFormFieldModule, MatButtonModule, FormsModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   username = '';
