@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { lastValueFrom } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -13,6 +13,17 @@ export class RpWeaveClient {
             this.createFullUrl(url), 
             body);
         return await lastValueFrom(post);
+    }
+
+    public async getAsync<TResponse>(url: string, queryParams: {}) : Promise<TResponse> {
+        const options = { params: new HttpParams().appendAll(queryParams)};
+        
+        const get = this.httpClient.get<TResponse>(
+            this.createFullUrl(url),
+            options
+        );
+
+        return await lastValueFrom(get);
     }
 
     private createFullUrl(url: string) {
