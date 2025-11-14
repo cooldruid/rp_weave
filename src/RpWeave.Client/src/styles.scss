@@ -2,7 +2,8 @@
 @use '@angular/material' as mat;
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Arcane & Mystical — TTRPG Worldbuilding Theme
 // Deep indigo, gold accent, and muted red warnings
