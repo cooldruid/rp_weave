@@ -6,9 +6,9 @@ namespace RpWeave.Server.Api.Features.Ai.Prompt;
 public class PromptController(PromptHandler handler) : ControllerBase
 {
     [HttpPost("api/ai/prompt")]
-    public async Task<IActionResult> Prompt(string collectionName, string query)
+    public async Task<IActionResult> Prompt(PromptRequest request)
     {
-        var response = await handler.HandleAsync(collectionName, query);
+        var response = await handler.HandleAsync(request);
 
         return Ok(response);
     }

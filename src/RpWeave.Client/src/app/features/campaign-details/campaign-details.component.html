@@ -1,15 +1,55 @@
 @if(campaign) {
-    <h2>{{campaign.name}}</h2>
+    <div class="d-flex h-100">
+        <div>
+            <h2>{{campaign.name}}</h2>
 
-    <mat-list>
-        <mat-list-item>{{campaign.description}}</mat-list-item>
-        <mat-list-item>Has uploaded PDF: {{campaign.pdfPath ? 'yes' : 'no'}}</mat-list-item>
-        @if(campaign.pdfPath) {
-            <mat-list-item>PDF path: {{campaign.pdfPath}}</mat-list-item>
-        }
-        <mat-list-item>Has mapped vectors: {{campaign.vectorCollectionName ? 'yes' : 'no'}}</mat-list-item>
-        @if(campaign.vectorCollectionName) {
-            <mat-list-item>Vector collection name: {{campaign.vectorCollectionName}}</mat-list-item>
-        }
-    </mat-list>
+            <mat-list>
+                <mat-list-item>{{campaign.description}}</mat-list-item>
+                <mat-list-item>Has uploaded PDF: {{campaign.pdfPath ? 'yes' : 'no'}}</mat-list-item>
+                @if(campaign.pdfPath) {
+                    <mat-list-item>PDF path: {{campaign.pdfPath}}</mat-list-item>
+                }
+                <mat-list-item>Has mapped vectors: {{campaign.vectorCollectionName ? 'yes' : 'no'}}</mat-list-item>
+                @if(campaign.vectorCollectionName) {
+                    <mat-list-item>Vector collection name: {{campaign.vectorCollectionName}}</mat-list-item>
+                }
+            </mat-list>
+        </div>
+        <mat-card appearance="outlined" class="w-100 h-100 d-flex flex-column">
+            <mat-card-title class="p-3">
+                <h4>Chat</h4>
+                <mat-divider></mat-divider>
+            </mat-card-title>
+            <mat-card-content class="flex-grow-1 d-flex flex-column overflow-auto">
+                @for(chatMessage of chatMessages; track chatMessage) {
+                    @if(chatMessage.type == 'user') {
+                        <mat-card appearance="outlined" class="align-self-end bg-secondary mb-4">
+                            <mat-card-content class="py-2">{{chatMessage.content}}</mat-card-content>
+                        </mat-card>
+                    }
+                    @else {
+                        <span class="mb-4">{{chatMessage.content}}</span>
+                    }
+                }
+                @if(modelThinking) {
+                    <mat-spinner></mat-spinner>
+                }
+            </mat-card-content>
+            <mat-card-actions>
+                <form class="d-flex col-12">
+                    <mat-form-field class="col-11">
+                        <mat-label>Chat</mat-label>
+                        <textarea matInput name="message" [(ngModel)]="message" [disabled]="modelThinking"></textarea>
+                    </mat-form-field>
+                    <button matIconButton 
+                        (click)="sendMessage()"
+                        class="align-self-start" 
+                        [disabled]="modelThinking">
+                        <mat-icon color="primary">send</mat-icon>
+                    </button>
+                </form>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    
 }
