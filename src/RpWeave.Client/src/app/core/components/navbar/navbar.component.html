@@ -1,5 +1,15 @@
 @if(showNavbar) {
-    <mat-toolbar color="primary">
-        <span>{{username}}</span>
+    <mat-toolbar color="tertiary">
+        <div class="d-flex w-100 justify-content-between">
+            <span>RP Weave</span>
+            <button mat-button class="font-monospace">
+                <mat-icon fontIcon="person"></mat-icon>
+                {{username}}
+            </button>
+        </div>
+        
     </mat-toolbar>
+    <mat-drawer-container class="h-100">
+        <mat-drawer mode="side" opened>Drawer content</mat-drawer>
+    </mat-drawer-container>
 }

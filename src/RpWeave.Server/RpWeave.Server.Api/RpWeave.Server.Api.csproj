@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="AspNetCore.Identity.Mongo" Version="10.1.0" />
+        <PackageReference Include="FluentValidation" Version="12.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" NoWarn="NU1605"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.4" NoWarn="NU1605"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
@@ -29,6 +30,10 @@
     <ItemGroup>
       <ProjectReference Include="..\RpWeave.Server.Core\RpWeave.Server.Core.csproj" />
       <ProjectReference Include="..\RpWeave.Server.Data\RpWeave.Server.Data.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Integrations.Ollama\RpWeave.Server.Integrations.Ollama.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Integrations.Qdrant\RpWeave.Server.Integrations.Qdrant.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Mcp\RpWeave.Server.Mcp.csproj" />
+      <ProjectReference Include="..\RpWeave.Server.Orchestrations.BookBreakdown\RpWeave.Server.Orchestrations.BookBreakdown.csproj" />
     </ItemGroup>
 
 </Project>

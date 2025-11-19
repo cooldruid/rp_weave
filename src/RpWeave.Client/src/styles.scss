@@ -2,12 +2,13 @@
 @use '@angular/material' as mat;
 @import "bootstrap/dist/css/bootstrap.min.css";
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Arcane & Mystical — TTRPG Worldbuilding Theme
 // Deep indigo, gold accent, and muted red warnings
 
-$worldbuilder-primary: mat.define-palette((
+$worldbuilder-primary: mat.m2-define-palette((
   50:  #f4f1fa,
   100: #dcd3f2,
   200: #c2b4ea,
@@ -25,7 +26,7 @@ $worldbuilder-primary: mat.define-palette((
   )
 ), 500);
 
-$worldbuilder-accent: mat.define-palette((
+$worldbuilder-accent: mat.m2-define-palette((
   50:  #fff8e1,
   100: #ffecb3,
   200: #ffe082,
@@ -43,7 +44,7 @@ $worldbuilder-accent: mat.define-palette((
   )
 ), 500);
 
-$worldbuilder-warn: mat.define-palette((
+$worldbuilder-warn: mat.m2-define-palette((
   50:  #fbe9e7,
   100: #ffcdd2,
   200: #ef9a9a,
@@ -62,19 +63,19 @@ $worldbuilder-warn: mat.define-palette((
 ), 500);
 
 // Define typography
-$worldbuilder-typography: mat.define-typography-config(
+$worldbuilder-typography: mat.m2-define-typography-config(
   $font-family: 'Merriweather, Roboto, serif',
-  $headline-1: mat.define-typography-level(96px, 112px, 300),
-  $headline-2: mat.define-typography-level(60px, 72px, 300),
-  $headline-3: mat.define-typography-level(48px, 56px, 400),
-  $headline-4: mat.define-typography-level(34px, 40px, 400),
-  $headline-5: mat.define-typography-level(24px, 32px, 500),
-  $body-1: mat.define-typography-level(16px, 24px, 400),
-  $button: mat.define-typography-level(14px, 24px, 600),
+  $headline-1: mat.m2-define-typography-level(96px, 112px, 300),
+  $headline-2: mat.m2-define-typography-level(60px, 72px, 300),
+  $headline-3: mat.m2-define-typography-level(48px, 56px, 400),
+  $headline-4: mat.m2-define-typography-level(34px, 40px, 400),
+  $headline-5: mat.m2-define-typography-level(24px, 32px, 500),
+  $body-1: mat.m2-define-typography-level(16px, 24px, 400),
+  $button: mat.m2-define-typography-level(14px, 24px, 600),
 );
 
 // Build the light theme
-$worldbuilder-light-theme: mat.define-light-theme((
+$worldbuilder-light-theme: mat.m2-define-light-theme((
   color: (
     primary: $worldbuilder-primary,
     accent: $worldbuilder-accent,
@@ -84,7 +85,7 @@ $worldbuilder-light-theme: mat.define-light-theme((
 ));
 
 // Build the dark theme
-$worldbuilder-dark-theme: mat.define-dark-theme((
+$worldbuilder-dark-theme: mat.m2-define-dark-theme((
   color: (
     primary: $worldbuilder-primary,
     accent: $worldbuilder-accent,
@@ -98,7 +99,7 @@ $worldbuilder-dark-theme: mat.define-dark-theme((
 
 // Scoped dark theme for toggle
 .dark-theme {
-  @include mat.all-component-colors(mat.define-dark-theme((
+  @include mat.all-component-colors(mat.m2-define-dark-theme((
     color: (
       primary: $worldbuilder-primary,
       accent: $worldbuilder-accent,
@@ -137,7 +138,7 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: 'Merriweather', 'Roboto', serif;
-  background-color: mat.get-color-from-palette($worldbuilder-primary, 50);
-  color: mat.get-color-from-palette($worldbuilder-primary, 900);
+  background-color: mat.m2-get-color-from-palette($worldbuilder-primary, 50);
+  color: mat.m2-get-color-from-palette($worldbuilder-primary, 900);
 }
 

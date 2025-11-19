@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
-  selector: 'app-landing',
-  standalone: true,
-  imports: [MatButtonModule, MatDividerModule],
-  templateUrl: './landing.component.html',
-  styleUrl: './landing.component.scss'
+    selector: 'app-landing',
+    imports: [MatButtonModule, MatDividerModule],
+    templateUrl: './landing.component.html',
+    styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
   showDivider = true;
@@ -24,5 +23,9 @@ export class LandingComponent {
 
   navigateToLogin() {
     this.router.navigate(['login']);
+  }
+
+  navigateToSignup() {
+    this.router.navigate(['signup']);
   }
 }

@@ -1,6 +1,7 @@
 ﻿services:
   rpweave.server.api:
     image: rpweave.server.api
+    user: root
     build:
       context: .
       dockerfile: RpWeave.Server.Api/Dockerfile
@@ -9,6 +10,9 @@
       - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__Issuer=http://localhost:8080
       - Authentication__Audience=rp-weave-api
+    volumes:
+      - ./testResults:/home/test
+      - uploads:/srv/rpweave/uploads
     ports:
       - "5000:8080"
 
@@ -29,5 +33,31 @@
     depends_on:
       - mongo
 
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: always
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      - OLLAMA_DEBUG=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all # alternatively, use `count: all` for all GPUs
+              capabilities: [gpu]
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - 6333:6333
+
 volumes:
   mongodbdata:
+  ollama:
+  uploads:
