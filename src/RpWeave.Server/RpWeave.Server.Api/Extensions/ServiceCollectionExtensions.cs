@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using AspNetCore.Identity.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using MongoDB.Bson;
 using RpWeave.Server.Api.Constants;
 using RpWeave.Server.Api.Settings;
 using RpWeave.Server.Data.Entities;
+using Serilog;
 
 namespace RpWeave.Server.Api.Extensions;
 
@@ -57,17 +59,41 @@ public static class ServiceCollectionExtensions
     {
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(UserRoleConstants.GameMaster, policy =>
-                policy.RequireRole(UserRoleConstants.Admin, UserRoleConstants.GameMaster));
             options.AddPolicy(UserRoleConstants.Admin, policy =>
                 policy.RequireRole(UserRoleConstants.Admin));
     
             options.DefaultPolicy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .RequireRole(UserRoleConstants.Admin, UserRoleConstants.GameMaster, UserRoleConstants.Player)
+                .RequireRole(UserRoleConstants.Admin, UserRoleConstants.User)
                 .Build();
         });
 
+        return services;
+    }
+    
+    public static IServiceCollection AddSystemSettings(this IServiceCollection services)
+    {
+        const string path = "/srv/rpweave/settings/system.json";
+
+        SystemSettings? settings;
+        if (File.Exists(path))
+        {
+            Log.Information("Loading system settings...");
+            var content = File.ReadAllText(path);
+            settings = JsonSerializer.Deserialize<SystemSettings>(content);
+        }
+        else
+        {
+            Log.Information("Creating system settings json...");
+            settings = new SystemSettings();
+            var json = JsonSerializer.Serialize(settings);
+            File.WriteAllText(path, json);
+        }
+        
+        ArgumentNullException.ThrowIfNull(settings);
+        services.AddSingleton(settings);
+        Log.Information("System settings loaded.");
+        
         return services;
     }
 }

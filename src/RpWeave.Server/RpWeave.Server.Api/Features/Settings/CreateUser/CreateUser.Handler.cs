@@ -1,21 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using RpWeave.Server.Api.Constants;
-using RpWeave.Server.Api.Settings;
 using RpWeave.Server.Core.Results;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Data.Entities;
 
-namespace RpWeave.Server.Api.Features.User.Register;
+namespace RpWeave.Server.Api.Features.Settings.CreateUser;
 
 [ScopedService]
-public class RegisterHandler(
-    UserManager<AppUser> userManager,
-    SystemSettings systemSettings)
+public class CreateUserHandler(UserManager<AppUser> userManager)
 {
-    public async Task<Result> HandleAsync(RegisterRequest request)
+    public async Task<Result> HandleAsync(CreateUserRequest request)
     {
-        if (!systemSettings.UsersCanRegister)
-            return Result.Failure(ErrorCodes.Unauthorized, "Server does not currently allow user registrations.");
+        if (!UserRoleConstants.AllRoles.Contains(request.Role))
+            return Result.Failure(ErrorCodes.UserInput, "Role does not exist.");
         
         var user = new AppUser
         {
@@ -27,7 +24,7 @@ public class RegisterHandler(
         if(!creationResult.Succeeded)
             return Result.Failure(ErrorCodes.UserInput, string.Join("\n", creationResult.Errors.Select(x => x.Description)));
         
-        await userManager.AddToRoleAsync(user, UserRoleConstants.Admin);
+        await userManager.AddToRoleAsync(user, request.Role);
         
         return Result.Success();
     }
