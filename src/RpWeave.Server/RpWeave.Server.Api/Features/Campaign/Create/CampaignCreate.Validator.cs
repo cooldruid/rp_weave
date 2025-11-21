@@ -11,6 +11,10 @@ public class CampaignCreateValidator : AbstractValidator<CampaignCreateRequest>
                 {
                     data.RuleFor(d => d.Name).NotEmpty().WithMessage("Campaign name is required");
                     data.RuleFor(d => d.Description).NotEmpty().WithMessage("Campaign description is required");
+                    data.RuleFor(d => d.ChapterFontSize).NotNull().Unless(d => !d.CreateEmbeddings).WithMessage("Chapter font size is required if embeddings should be created");
+                    data.RuleFor(d => d.SubChapterFontSize).NotNull().Unless(d => !d.CreateEmbeddings).WithMessage("Sub-chapter font size is required if embeddings should be created");
+                    data.RuleFor(d => d.HeaderFontSize).NotNull().Unless(d => !d.CreateEmbeddings).WithMessage("Header font size is required if embeddings should be created");
+                    data.RuleFor(d => d.IgnoreFooter).NotNull().Unless(d => !d.CreateEmbeddings).WithMessage("Ignore footer is required if embeddings should be created");
                 }
             );
 

@@ -39,7 +39,13 @@ public class CampaignCreateHandler(
 
             if (request.Data.CreateEmbeddings)
             {
-                var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(filePath);
+                var orchestrationRequest = new BookBreakdownOrchestrationRequest(
+                    filePath, 
+                    request.Data.ChapterFontSize!.Value, 
+                    request.Data.SubChapterFontSize!.Value, 
+                    request.Data.HeaderFontSize!.Value, 
+                    request.Data.IgnoreFooter!.Value);
+                var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(orchestrationRequest);
                 entity.VectorCollectionName = collectionName;
             }
         }

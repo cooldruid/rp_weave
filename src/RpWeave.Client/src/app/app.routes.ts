@@ -11,6 +11,7 @@ import { inject } from '@angular/core';
 import { SettingsComponent } from './features/settings/settings.component';
 import { adminGuard } from './core/guards/admin.guard';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
+import { CreateCampaignComponent } from './features/campaigns/create-campaign/create-campaign.component';
 
 export const routes: Routes = [
     { path: 'landing', component: LandingComponent, title: 'RP Weave' },
@@ -18,6 +19,7 @@ export const routes: Routes = [
     { path: 'signup', component: SignupComponent, title: 'Sign up to RP Weave' },
     { path: 'settings', component: SettingsComponent, title: 'RP Weave', canActivate: [adminGuard] },
     { path: 'campaigns', component: CampaignsComponent, title: 'RP Weave', canActivate: [authGuard] },
+    { path: 'campaigns/add', component: CreateCampaignComponent, title: 'RP Weave', canActivate: [authGuard] },
     { path: 'dashboard', component: DashboardComponent, title: 'RP Weave', canActivate: [authGuard] },
     { path: 'change-password', component: ChangePasswordComponent, title: 'RP Weave', canActivate: [authGuard] },
     { path: 'campaign-details/:id', component: CampaignDetailsComponent, title: 'RP Weave', canActivate: [authGuard] },
