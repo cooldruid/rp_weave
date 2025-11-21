@@ -26,7 +26,7 @@ public class LoginHandler(
         var userRoles = await userManager.GetRolesAsync(user);
         var role = userRoles.FirstOrDefault() ?? string.Empty;
 
-        var token = tokenProvider.GenerateAccessToken(user, role.ToUpperInvariant());
+        var token = tokenProvider.GenerateAccessToken(user, role);
         var refreshToken = TokenProvider.GenerateRefreshToken();
 
         var refreshTokenExpiration = DateTime.UtcNow.AddDays(7);

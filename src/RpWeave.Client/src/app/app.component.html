@@ -1,27 +1,41 @@
 @if(showNavbar) {
     <mat-toolbar color="primary">
         <div class="d-flex w-100 justify-content-between">
-            <span>RP Weave</span>
-            <button mat-button class="font-monospace">
-                <mat-icon fontIcon="person"></mat-icon>
-                {{username}}
-            </button>
-        </div>
-            
-    </mat-toolbar>
-    <mat-sidenav-container style="height: calc(100% - 64px)">
-        <mat-sidenav #sidenav mode="side" opened style="width: 230px">
-            <mat-action-list class="p-0">
-                <button mat-list-item (click)="navigateToCampaigns()">Campaigns</button>
-            </mat-action-list>
-        </mat-sidenav>
-
-        <mat-sidenav-content>
-            <div class="p-2 h-100">
-                <router-outlet></router-outlet>
+            <div class="d-flex my-auto">
+                <span>RP Weave</span>
+                <div class="mx-4"></div>
+                <button 
+                    mat-button 
+                    style="font-size: medium; border-radius: 12px;"
+                    class="p-3"
+                    (click)="navigateToCampaigns()">
+                        Campaigns
+                </button>
             </div>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
+            
+            <div class="d-flex my-auto">
+                @if(isAdmin()) {
+                    <button mat-icon-button (click)="navigateToSettings()">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                }
+                <button mat-button class="font-monospace my-auto" [matMenuTriggerFor]="usermenu">
+                    <mat-icon>person</mat-icon>
+                    {{username}}
+                </button>
+                <mat-menu #usermenu="matMenu">
+                    <button mat-menu-item (click)="navigateToChangePassword()">Change password</button>
+                    <button mat-menu-item (click)="logOut()">Log out</button>
+                </mat-menu>
+            </div>
+        </div>
+    </mat-toolbar>
+    
+    <div style="height: calc(100% - 64px)">
+        <div class="h-100">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
 }
 @else {
     <router-outlet></router-outlet>

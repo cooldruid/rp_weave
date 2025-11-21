@@ -87,6 +87,7 @@ public static class ServiceCollectionExtensions
             Log.Information("Creating system settings json...");
             settings = new SystemSettings();
             var json = JsonSerializer.Serialize(settings);
+            Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "");
             File.WriteAllText(path, json);
         }
         

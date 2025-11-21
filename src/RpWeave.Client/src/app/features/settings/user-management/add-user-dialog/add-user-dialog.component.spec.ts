@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar.component';
+import { AddUserDialogComponent } from './add-user-dialog.component';
 
-describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+describe('AddUserDialogComponent', () => {
+  let component: AddUserDialogComponent;
+  let fixture: ComponentFixture<AddUserDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent]
+      imports: [AddUserDialogComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(NavbarComponent);
+
+    fixture = TestBed.createComponent(AddUserDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

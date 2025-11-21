@@ -48,7 +48,11 @@ var app = builder.Build();
 // this is bad bad bad, but will do for now
 ServiceProviderInstance.Initialize(app.Services);
 
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors(options => 
+    options.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:4200"));
 
 app.UseHttpsRedirection();
 app.UseRouting();

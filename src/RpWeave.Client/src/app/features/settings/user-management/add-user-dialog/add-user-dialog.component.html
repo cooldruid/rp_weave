@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Add user</h2>
+<mat-dialog-content>
+  <mat-form-field class="w-100">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="username" />
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Password</mat-label>
+    <input matInput [(ngModel)]="password" type="password"/>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Repeat Password</mat-label>
+    <input matInput [(ngModel)]="repeatPassword" type="password"/>
+  </mat-form-field>
+  <mat-form-field class="w-100">
+    <mat-label>Role</mat-label>
+    <mat-select required [(ngModel)]="role">
+      <mat-option value="ADMIN">Admin</mat-option>
+      <mat-option value="USER">User</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="d-flex justify-content-end w-100">
+    <button matButton (click)="onCancel()">Cancel</button>
+    <button matButton (click)="onSubmit()" cdkFocusInitial>Ok</button>
+  </div>
+</mat-dialog-actions>

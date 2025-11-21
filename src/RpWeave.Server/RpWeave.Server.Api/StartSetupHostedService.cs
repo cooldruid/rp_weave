@@ -56,8 +56,13 @@ public class StartSetupHostedService(IServiceProvider serviceProvider) : IHosted
 
         var username = "admin";
         var password = "ChangeMe!123";
-        
-        await userManager.CreateAsync(new AppUser { UserName = username }, password);
+
+        var user = new AppUser
+        {
+            UserName = username
+        };
+        await userManager.CreateAsync(user, password);
+        await userManager.AddToRoleAsync(user, UserRoleConstants.Admin);
         
         Log.Information("Admin user created. Use credentials:\n{Username}\n{Password}\nMake sure to change your password as soon as possible.", username, password);
     }

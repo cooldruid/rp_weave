@@ -27,7 +27,7 @@ public class RegisterHandler(
         if(!creationResult.Succeeded)
             return Result.Failure(ErrorCodes.UserInput, string.Join("\n", creationResult.Errors.Select(x => x.Description)));
         
-        await userManager.AddToRoleAsync(user, UserRoleConstants.Admin);
+        await userManager.AddToRoleAsync(user, UserRoleConstants.User);
         
         return Result.Success();
     }
