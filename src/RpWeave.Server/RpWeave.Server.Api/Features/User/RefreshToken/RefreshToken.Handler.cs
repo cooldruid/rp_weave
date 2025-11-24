@@ -20,25 +20,25 @@ public class RefreshTokenHandler(
         var refreshToken = httpContext.Request.Cookies["refreshToken"];
         
         if (string.IsNullOrEmpty(refreshToken))
-            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.Unauthorized, "Invalid refresh token");
+            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.NotFound, "Invalid refresh token");
 
         var currentRefreshToken = await refreshTokenRepository.FindByRefreshTokenAsync(refreshToken);
         if (currentRefreshToken == null)
         {
             httpContext.Response.Cookies.Delete("refreshToken");
-            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.Unauthorized, "Invalid refresh token");
+            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.NotFound, "Invalid refresh token");
         }
 
         if (currentRefreshToken.ExpiresOn < DateTime.UtcNow)
         {
             await refreshTokenRepository.DeleteAsync(currentRefreshToken);
             httpContext.Response.Cookies.Delete("refreshToken");
-            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.Unauthorized, "Invalid refresh token");
+            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.NotFound, "Invalid refresh token");
         }
 
         var user = await userManager.FindByIdAsync(currentRefreshToken.UserId);
         if(user == null)
-            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.Unauthorized, "Invalid refresh token");
+            return ValueResult<RefreshTokenResponse>.Failure(ErrorCodes.NotFound, "Invalid refresh token");
         
         var roles = await userManager.GetRolesAsync(user);
         var accessToken = tokenProvider.GenerateAccessToken(user, roles.Single());

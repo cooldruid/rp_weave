@@ -2,12 +2,13 @@
     <h3 class="mb-3">Add Campaign</h3>
     <mat-form-field class="w-100" color="accent">
         <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="request.name" name="name"/>
+        <input matInput required [(ngModel)]="request.name" name="name"/>
     </mat-form-field>
     <mat-form-field class="w-100" color="accent">
         <mat-label>Description</mat-label>
-        <textarea matInput [(ngModel)]="request.description" name="description"></textarea>
+        <textarea matInput required [(ngModel)]="request.description" name="description"></textarea>
     </mat-form-field>
+    <input type="file" class="w-100" accept="application/pdf" (change)="onFileSelected($event)" />
     <mat-checkbox (change)="onCreateEmbeddingsChanged($event.checked)" name="createEmbeddings" class="mb-3">Create Embeddings</mat-checkbox>
 
     @if(showOptionalFields) {
@@ -36,8 +37,8 @@
         <mat-checkbox [(ngModel)]="request.ignoreFooter" name="ignoreFooter">Ignore footer</mat-checkbox>
     }
     <div class="mt-4 d-flex">
-        <button mat-flat-button color="primary" class="col-3">Create</button>
+        <button mat-flat-button color="primary" class="col-3" (click)="submit()">Create</button>
         <div class="mx-1"></div>
-        <button mat-flat-button class="col-3">Cancel</button>
+        <button mat-flat-button class="col-3" (click)="cancel()">Cancel</button>
     </div>
 </div>

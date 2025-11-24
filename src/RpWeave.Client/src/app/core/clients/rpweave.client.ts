@@ -12,7 +12,9 @@ export class RpWeaveClient {
         const post = this.httpClient.post<TResponse>(
             this.createFullUrl(url), 
             body,
-            {withCredentials: true});
+            {
+                withCredentials: true
+            });
         return await lastValueFrom(post);
     }
 
