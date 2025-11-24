@@ -8,6 +8,9 @@ export type User = {
     name: string;
 }
 
+const adminRole = 'ADMIN';
+const userRole = 'USER';
+
 @Injectable({providedIn: 'root'})
 export class UserService {
     private _user$ = new BehaviorSubject<User | undefined>(undefined);
@@ -33,6 +36,10 @@ export class UserService {
         this._accessToken = token;
         localStorage.setItem('accessToken', token);
         this._user$.next(jwtDecode<User>(token));
+    }
+
+    isAdmin(): boolean {
+        return this._user$.value?.role === adminRole;
     }
 
     clearUser() {

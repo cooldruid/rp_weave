@@ -1,7 +1,7 @@
 using System.Text.Json;
+using RpWeave.Server.Api;
 using RpWeave.Server.Api.Extensions;
 using RpWeave.Server.Api.Middleware;
-using RpWeave.Server.Api.Seeders;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Integrations.Ollama.Extensions;
 using RpWeave.Server.Mcp;
@@ -31,11 +31,12 @@ builder.Services.AddAttributedServices(
         typeof(RpWeave.Server.Integrations.Ollama.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Qdrant.AssemblyMarker).Assembly
     ]);
-builder.Services.AddHostedService<IdentitySeeder>();
+builder.Services.AddHostedService<StartSetupHostedService>();
 
 builder.Services.AddRpwIdentityProvider()
     .AddRpwAuthentication(builder.Configuration)
-    .AddRpwAuthorization();
+    .AddRpwAuthorization()
+    .AddSystemSettings();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -47,7 +48,11 @@ var app = builder.Build();
 // this is bad bad bad, but will do for now
 ServiceProviderInstance.Initialize(app.Services);
 
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors(options => 
+    options.AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+        .WithOrigins("http://localhost:4200"));
 
 app.UseHttpsRedirection();
 app.UseRouting();

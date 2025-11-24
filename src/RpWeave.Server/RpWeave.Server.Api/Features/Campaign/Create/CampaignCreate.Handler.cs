@@ -1,3 +1,4 @@
+using System.Text.Json;
 using RpWeave.Server.Core.Results;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Data.Entities;
@@ -16,7 +17,12 @@ public class CampaignCreateHandler(
     public async Task<Result> HandleAsync(CampaignCreateRequest request)
     {
         // Validation
-        var validator = new CampaignCreateValidator();
+        var data = JsonSerializer.Deserialize<CampaignCreateData>(request.Data,
+            new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        var validator = new CampaignCreateValidator(data);
         var validationResult = await validator.ValidateAsync(request);
         
         if(!validationResult.IsValid)
@@ -25,8 +31,8 @@ public class CampaignCreateHandler(
         // Create entity
         var entity = new CampaignEntity
         {
-            Name = request.Data.Name,
-            Description = request.Data.Description
+            Name = data.Name,
+            Description = data.Description
         };
         
         // Store file
@@ -37,9 +43,15 @@ public class CampaignCreateHandler(
             await request.Pdf.CopyToAsync(fileStream);
             entity.PdfPath = filePath;
 
-            if (request.Data.CreateEmbeddings)
+            if (data.CreateEmbeddings)
             {
-                var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(filePath);
+                var orchestrationRequest = new BookBreakdownOrchestrationRequest(
+                    filePath, 
+                    data.ChapterFontSize!.Value, 
+                    data.SubChapterFontSize!.Value, 
+                    data.HeaderFontSize!.Value, 
+                    data.IgnoreFooter!.Value);
+                var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(orchestrationRequest);
                 entity.VectorCollectionName = collectionName;
             }
         }

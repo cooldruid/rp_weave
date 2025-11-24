@@ -1,0 +1,17 @@
+<mat-sidenav-container class="h-100">
+        <mat-sidenav #sidenav mode="side" opened style="width: 230px">
+            <mat-action-list class="p-0">
+                @for(tab of allTabs; track tab) {
+                    <button mat-list-item (click)="switchTab(tab)">{{tab}}</button>
+                }
+            </mat-action-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <div class="p-2 h-100">
+                @if(selectedTab === 'User Management') {
+                    <app-user-management></app-user-management>
+                }
+            </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

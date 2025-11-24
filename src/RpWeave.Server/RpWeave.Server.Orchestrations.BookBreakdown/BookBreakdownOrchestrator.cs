@@ -9,22 +9,30 @@ using RpWeave.Server.Orchestrations.BookBreakdown.Tools;
 
 namespace RpWeave.Server.Orchestrations.BookBreakdown;
 
+public record BookBreakdownOrchestrationRequest(
+    string FilePath,
+    int ChapterFontSize,
+    int SubChapterFontSize,
+    int HeaderFontSize,
+    bool IgnoreFooter);
+
 [ScopedService]
 public class BookBreakdownOrchestrator(
     OllamaEmbedClient embedClient,
     VectorDbClient vectorDbClient)
 {
-    public async Task<string> ProcessBookBreakdown(string filePath)
+    public async Task<string> ProcessBookBreakdown(BookBreakdownOrchestrationRequest request)
     {
         var pdfChunker = new PdfChunkModule();
-        var chunks = pdfChunker.ChunkPdf(filePath);
+        var pdfChunkRequest = new PdfChunkRequest(request.FilePath, request.ChapterFontSize, request.SubChapterFontSize, request.HeaderFontSize, request.IgnoreFooter);
+        var chunks = pdfChunker.ChunkPdf(pdfChunkRequest);
 
         foreach (var chunk in chunks)
         {
             chunk.Content = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}\n");
         }
         
-        var collectionName = $"{Path.GetFileNameWithoutExtension(filePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
+        var collectionName = $"{Path.GetFileNameWithoutExtension(request.FilePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
         await vectorDbClient.CreateCollectionAsync(collectionName);
         
         foreach (var chunk in chunks)

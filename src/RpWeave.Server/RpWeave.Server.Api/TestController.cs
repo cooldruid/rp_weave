@@ -25,15 +25,6 @@ public class TestController(
         //new PdfProcessor().Process(filePath);
         return Ok();
     }
-    
-    [HttpGet("api/test/orchestrate")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Orchestrate(string fileLocation)
-    {
-        var collectionName = await bookBreakdownOrchestrator.ProcessBookBreakdown(fileLocation);
-        
-        return Ok(collectionName);
-    }
 
     [HttpGet("api/test/queryvector")]
     [AllowAnonymous]

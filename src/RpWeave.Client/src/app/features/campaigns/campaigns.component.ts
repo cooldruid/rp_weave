@@ -30,6 +30,10 @@ export class CampaignsComponent {
     this.router.navigate(['campaign-details/' + id]);
   }
 
+  navigateToAddCampaign() {
+    this.router.navigate(['campaigns/add']);
+  }
+
   onCampaignDelete() {
     console.log('Not implemented yet');
   }

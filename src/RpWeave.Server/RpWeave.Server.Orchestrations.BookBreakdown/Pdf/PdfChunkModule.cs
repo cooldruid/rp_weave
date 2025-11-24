@@ -7,15 +7,18 @@ using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
 
 namespace RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
 
+public record PdfChunkRequest(
+    string FilePath,
+    int ChapterFontSize,
+    int SubChapterFontSize,
+    int HeaderFontSize,
+    bool IgnoreFooter);
+
 public class PdfChunkModule
 {
-    public List<PdfChunk> ChunkPdf(string filePath, bool ignoreFooter = true)
+    public List<PdfChunk> ChunkPdf(PdfChunkRequest request)
     {
-        var chapterFontSize = 20;
-        var subChapterFontSize = 15;
-        var headerFontSize = 12;
-
-        using var pdf = PdfDocument.Open(filePath);
+        using var pdf = PdfDocument.Open(request.FilePath);
         var chunks = new List<PdfChunk>();
 
         var chapterName = "";
@@ -28,11 +31,6 @@ public class PdfChunkModule
         {
             var footerThreshold = page.Height * 0.05;
             var words = page.GetWords();
-            var recursiveXyCut = new RecursiveXYCut(new RecursiveXYCut.RecursiveXYCutOptions()
-            {
-                MinimumWidth = page.Width / 3.0,
-                
-            });
             var blocks = RecursiveXYCut.Instance.GetBlocks(words);
             
             var orderedBlocks = OrderTextBlocks(blocks, true);
@@ -41,7 +39,7 @@ public class PdfChunkModule
             {
                 foreach (var line in block.TextLines)
                 {
-                    var lineWords = ignoreFooter
+                    var lineWords = request.IgnoreFooter
                         ? line.Words.Where(x => x.BoundingBox.Bottom >= footerThreshold)
                         : line.Words;
 
@@ -52,9 +50,9 @@ public class PdfChunkModule
                         // assume one word only has one font size
                         var fontSize = word.Letters[0].PointSize;
 
-                        var isChapter = fontSize >= chapterFontSize;
-                        var isSubChapter = fontSize >= subChapterFontSize && fontSize < chapterFontSize;
-                        var isHeader = fontSize >= headerFontSize && fontSize < subChapterFontSize;
+                        var isChapter = fontSize >= request.ChapterFontSize;
+                        var isSubChapter = fontSize >= request.SubChapterFontSize && fontSize < request.ChapterFontSize;
+                        var isHeader = fontSize >= request.HeaderFontSize && fontSize < request.SubChapterFontSize;
 
                         if (isChapter)
                         {

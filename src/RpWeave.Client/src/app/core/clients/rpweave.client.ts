@@ -11,12 +11,18 @@ export class RpWeaveClient {
     public async postAsync<TRequest, TResponse>(url: string, body: TRequest): Promise<TResponse> {
         const post = this.httpClient.post<TResponse>(
             this.createFullUrl(url), 
-            body);
+            body,
+            {
+                withCredentials: true
+            });
         return await lastValueFrom(post);
     }
 
     public async getAsync<TResponse>(url: string, queryParams: {}) : Promise<TResponse> {
-        const options = { params: new HttpParams().appendAll(queryParams)};
+        const options = { 
+            params: new HttpParams().appendAll(queryParams),
+            withCredentials: true
+        };
         
         const get = this.httpClient.get<TResponse>(
             this.createFullUrl(url),
