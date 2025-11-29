@@ -1,6 +1,6 @@
-namespace RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
+namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction;
 
-public class PdfChunk
+public class TextChunk
 {
     public required string Chapter { get; set; }
     public required string Subchapter { get; set; }

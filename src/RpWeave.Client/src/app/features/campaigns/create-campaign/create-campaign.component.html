@@ -8,7 +8,7 @@
         <mat-label>Description</mat-label>
         <textarea matInput required [(ngModel)]="request.description" name="description"></textarea>
     </mat-form-field>
-    <input type="file" class="w-100" accept="application/pdf" (change)="onFileSelected($event)" />
+    <input type="file" class="w-100" accept="application/pdf, text/markdown" (change)="onFileSelected($event)" />
     <mat-checkbox (change)="onCreateEmbeddingsChanged($event.checked)" name="createEmbeddings" class="mb-3">Create Embeddings</mat-checkbox>
 
     @if(showOptionalFields) {

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.Features;
 using RpWeave.Server.Api;
 using RpWeave.Server.Api.Extensions;
 using RpWeave.Server.Api.Middleware;
@@ -32,6 +33,9 @@ builder.Services.AddAttributedServices(
         typeof(RpWeave.Server.Integrations.Qdrant.AssemblyMarker).Assembly
     ]);
 builder.Services.AddHostedService<StartSetupHostedService>();
+
+// do not do this at home
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 100 * 1024 * 1024);
 
 builder.Services.AddRpwIdentityProvider()
     .AddRpwAuthentication(builder.Configuration)

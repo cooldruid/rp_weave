@@ -58,7 +58,7 @@ export class CreateCampaignComponent {
       const formData = new FormData();
 
       if(this.file)
-        formData.append('Pdf', this.file);
+        formData.append('File', this.file);
 
       formData.append('Data', JSON.stringify(this.request));
 

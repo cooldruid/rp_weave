@@ -49,6 +49,7 @@ export class CampaignDetailsComponent {
     this.chatMessages.push(chatMessage);
 
     const postChatMessage: PostChatMessageModel = {
+      campaignId: this.campaign!.id,
       collectionName: this.campaign!.vectorCollectionName!,
       prompt: this.message
     }

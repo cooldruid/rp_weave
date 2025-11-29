@@ -22,13 +22,13 @@ public class CampaignCreateValidator : AbstractValidator<CampaignCreateRequest>
                     .WithMessage("Ignore footer is required if embeddings should be created");
             });
 
-        RuleFor(req => req.Pdf)
-            .Must(pdf => pdf == null || Path.GetExtension(pdf.FileName) == ".pdf")
-            .WithMessage("Campaign file must be a PDF. Alternatively, do not provide a file if you do not need to create embeddings");
+        RuleFor(req => req.File)
+            .Must(file => file == null || Path.GetExtension(file.FileName) == ".pdf" || Path.GetExtension(file.FileName) == ".md")
+            .WithMessage("Campaign file must be a PDF or a markdown file. Alternatively, do not provide a file if you do not need to create embeddings");
         
-        RuleFor(req => req.Pdf)
+        RuleFor(req => req.File)
             .NotNull()
             .Unless(_ => !campaignCreateData?.CreateEmbeddings ?? false)
-            .WithMessage("Campaign PDF file is required if embeddings should be created");
+            .WithMessage("Campaign file is required if embeddings should be created");
     }
 }

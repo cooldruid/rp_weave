@@ -8,7 +8,6 @@ using RpWeave.Server.Mcp;
 using RpWeave.Server.Mcp.Orchestrators;
 using RpWeave.Server.Mcp.Tools;
 using RpWeave.Server.Orchestrations.BookBreakdown;
-using RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
 
 namespace RpWeave.Server.Api;
 
@@ -18,14 +17,6 @@ public class TestController(
     OllamaEmbedClient embedClient,
     VectorDbClient vectorDbClient) : ControllerBase
 {
-    [HttpGet("api/test/extractpdf")]
-    [AllowAnonymous]
-    public IActionResult ExtractPdf(string filePath)
-    {
-        //new PdfProcessor().Process(filePath);
-        return Ok();
-    }
-
     [HttpGet("api/test/queryvector")]
     [AllowAnonymous]
     public async Task<IActionResult> QueryVector(string collectionName, string query)
