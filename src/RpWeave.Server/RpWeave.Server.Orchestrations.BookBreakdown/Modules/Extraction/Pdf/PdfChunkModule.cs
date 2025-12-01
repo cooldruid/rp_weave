@@ -63,9 +63,9 @@ public class PdfChunkModule
                             {
                                 var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -89,9 +89,9 @@ public class PdfChunkModule
                             {
                                 var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -114,9 +114,9 @@ public class PdfChunkModule
                             {
                                 var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -139,7 +139,7 @@ public class PdfChunkModule
 
         foreach (var chunk in chunks)
         {
-            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}",
+            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading}",
                 chunk.Content);
         }
 

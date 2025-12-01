@@ -26,7 +26,7 @@ public class StorageModule(
         Log.Information("Vector collection created with name: {CollectionName}", collectionName);
         
         // store chapters in db
-        var chapterGroups = request.Chunks.GroupBy(c => c.Chapter);
+        var chapterGroups = request.Chunks.GroupBy(c => c.Level1Heading);
         foreach (var chapterGroup in chapterGroups)
         {
             var chapterEntity = new ChapterEntity()
@@ -42,7 +42,7 @@ public class StorageModule(
 
                 // create vector
                 await CreateVectorEntryAsync(chunk, collectionName, chapterEntity);
-                Log.Information("Vector entry created for chunk with path: {Path}", $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}");
+                Log.Information("Vector entry created for chunk with path: {Path}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading} > {chunk.Level4Heading} > {chunk.Level5Heading}");
             }
             
             await chapterEntityRepository.AddAsync(chapterEntity);
@@ -54,25 +54,28 @@ public class StorageModule(
 
     private async Task CreateVectorEntryAsync(TextChunk chunk, string collectionName, ChapterEntity chapterEntity)
     {
-        var vectorContent = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}\n");
+        var headings = new List<string?> {chunk.Level1Heading, chunk.Level2Heading, chunk.Level3Heading, chunk.Level4Heading, chunk.Level5Heading}
+            .Where(x => !string.IsNullOrWhiteSpace(x));
+        var vectorContent = $"Chapter map: {string.Join(" > ", headings)}\n" +
+                            $"Content: {chunk.Content}";
         var vector = await embedClient.GenerateEmbeddingsAsync(vectorContent);
         
         await vectorDbClient.UpsertAsync(
             new VectorDbUpsertRequest(collectionName, 
                 vector, 
                 chapterEntity.Id.ToString(),
-                chunk.Content));
+                vectorContent));
     }
 
     private static void PopulateChapterEntityText(TextChunk chunk, ChapterEntity chapterEntity)
     {
         var chunkText = "";
                 
-        if(!string.IsNullOrWhiteSpace(chunk.Subchapter))
-            chunkText += chunk.Subchapter;
+        if(!string.IsNullOrWhiteSpace(chunk.Level2Heading))
+            chunkText += chunk.Level2Heading;
 
-        if (!string.IsNullOrWhiteSpace(chunk.Header))
-            chunkText += $" > {chunk.Header}";
+        if (!string.IsNullOrWhiteSpace(chunk.Level3Heading))
+            chunkText += $" > {chunk.Level3Heading}";
 
         chunkText += "\n";
         chunkText += chunk.Content;

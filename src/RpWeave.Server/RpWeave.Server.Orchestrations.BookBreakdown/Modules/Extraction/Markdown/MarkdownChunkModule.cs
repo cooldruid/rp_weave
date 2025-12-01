@@ -13,9 +13,11 @@ public class MarkdownChunkModule
         var markdownText = File.ReadAllText(request.FilePath);
         var markdown = Markdig.Markdown.Parse(markdownText);
         
-        var chapterName = "";
-        var subChapterName = "";
-        var headerName = "";
+        var level1Heading = "";
+        var level2Heading = "";
+        var level3Heading = "";
+        var level4Heading = "";
+        var level5Heading = "";
         var currentContent = "";
         var order = 0;
         
@@ -25,86 +27,147 @@ public class MarkdownChunkModule
         {
             if (block is HeadingBlock heading)
             {
-                var isChapter = heading.Level == request.ChapterLevel;
-
-                if (isChapter)
+                if (heading.Level == 1)
                 {
                     if (currentContent.Length > 0)
                     {
                         var chunk = new TextChunk
                         {
-                            Chapter = chapterName.Trim(),
-                            Subchapter = subChapterName.Trim(),
-                            Header = headerName.Trim(),
+                            Level1Heading = level1Heading.Trim(),
+                            Level2Heading = level2Heading.Trim(),
+                            Level3Heading = level3Heading.Trim(),
+                            Level4Heading = level4Heading.Trim(),
+                            Level5Heading = level5Heading.Trim(),
                             Order = order,
                             Content = currentContent.Trim()
                         };
                         chunks.Add(chunk);
 
-                        chapterName = "";
-                        subChapterName = "";
-                        headerName = "";
+                        level1Heading = "";
+                        level2Heading = "";
+                        level3Heading = "";
+                        level4Heading = "";
+                        level5Heading = "";
                         currentContent = "";
                         order++;
                     }
                     
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
-                    chapterName += text;
+                    level1Heading += text;
 
                     continue;
                 }
                 
-                var isSubchapter = heading.Level == request.SubChapterLevel;
-                
-                if (isSubchapter)
+                if (heading.Level == 2)
                 {
                     if (currentContent.Length > 0)
                     {
                         var chunk = new TextChunk
                         {
-                            Chapter = chapterName.Trim(),
-                            Subchapter = subChapterName.Trim(),
-                            Header = headerName.Trim(),
+                            Level1Heading = level1Heading.Trim(),
+                            Level2Heading = level2Heading.Trim(),
+                            Level3Heading = level3Heading.Trim(),
+                            Level4Heading = level4Heading.Trim(),
+                            Level5Heading = level5Heading.Trim(),
                             Order = order,
                             Content = currentContent.Trim()
                         };
                         chunks.Add(chunk);
 
-                        subChapterName = "";
-                        headerName = "";
+                        level2Heading = "";
+                        level3Heading = "";
+                        level4Heading = "";
+                        level5Heading = "";
                         currentContent = "";
                         order++;
                     }
     
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
-                    subChapterName += text;
+                    level2Heading += text;
 
                     continue;
                 }
                 
-                var isHeader = heading.Level == request.HeaderLevel;
-                
-                if (isHeader)
+                if (heading.Level == 3)
                 {
                     if (currentContent.Length > 0)
                     {
                         var chunk = new TextChunk
                         {
-                            Chapter = chapterName.Trim(),
-                            Subchapter = subChapterName.Trim(),
-                            Header = headerName.Trim(),
+                            Level1Heading = level1Heading.Trim(),
+                            Level2Heading = level2Heading.Trim(),
+                            Level3Heading = level3Heading.Trim(),
+                            Level4Heading = level4Heading.Trim(),
+                            Level5Heading = level5Heading.Trim(),
                             Order = order,
                             Content = currentContent.Trim()
                         };
                         chunks.Add(chunk);
 
-                        headerName = "";
+                        level3Heading = "";
+                        level4Heading = "";
+                        level5Heading = "";
                         currentContent = "";
                         order++;
                     }
                     
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
-                    headerName += text;
+                    level3Heading += text;
+
+                    continue;
+                }
+                
+                if (heading.Level == 4)
+                {
+                    if (currentContent.Length > 0)
+                    {
+                        var chunk = new TextChunk
+                        {
+                            Level1Heading = level1Heading.Trim(),
+                            Level2Heading = level2Heading.Trim(),
+                            Level3Heading = level3Heading.Trim(),
+                            Level4Heading = level4Heading.Trim(),
+                            Level5Heading = level5Heading.Trim(),
+                            Order = order,
+                            Content = currentContent.Trim()
+                        };
+                        chunks.Add(chunk);
+
+                        level4Heading = "";
+                        level5Heading = "";
+                        currentContent = "";
+                        order++;
+                    }
+                    
+                    var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
+                    level4Heading += text;
+
+                    continue;
+                }
+                
+                if (heading.Level == 5)
+                {
+                    if (currentContent.Length > 0)
+                    {
+                        var chunk = new TextChunk
+                        {
+                            Level1Heading = level1Heading.Trim(),
+                            Level2Heading = level2Heading.Trim(),
+                            Level3Heading = level3Heading.Trim(),
+                            Level4Heading = level4Heading.Trim(),
+                            Level5Heading = level5Heading.Trim(),
+                            Order = order,
+                            Content = currentContent.Trim()
+                        };
+                        chunks.Add(chunk);
+
+                        level5Heading = "";
+                        currentContent = "";
+                        order++;
+                    }
+                    
+                    var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
+                    level5Heading += text;
 
                     continue;
                 }
@@ -119,7 +182,7 @@ public class MarkdownChunkModule
         
         foreach (var chunk in chunks)
         {
-            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}",
+            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading}",
                 chunk.Content);
         }
 

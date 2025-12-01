@@ -36,8 +36,7 @@ public class BookBreakdownOrchestrator(
         else if (Path.GetExtension(request.FilePath) == ".md")
         {
             var mdChunker = new MarkdownChunkModule();
-            // HARDCODED FOR TEST
-            var mdChunkRequest = new MarkdownChunkRequest(request.FilePath, 1, 2, 3);
+            var mdChunkRequest = new MarkdownChunkRequest(request.FilePath);
             chunks = mdChunker.Process(mdChunkRequest);
         }
 
