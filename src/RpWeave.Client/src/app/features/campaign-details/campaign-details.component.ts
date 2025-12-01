@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CampaignModel } from './models/campaign.model';
 import { CampaignDetailsService } from './campaign-details.service';
@@ -11,14 +11,17 @@ import { ChatMessageModel } from './models/chat-message.model';
 import { PostChatMessageModel } from './models/post-chat-message.model';
 import { FormsModule } from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-campaign-details',
-  imports: [FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule],
+  imports: [MarkdownModule, FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule],
   templateUrl: './campaign-details.component.html',
   styleUrl: './campaign-details.component.scss',
 })
 export class CampaignDetailsComponent {
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
+
   protected campaign: CampaignModel | undefined;
   protected chatMessages: ChatMessageModel[] = [];
   protected modelThinking: boolean = false;
@@ -56,6 +59,8 @@ export class CampaignDetailsComponent {
 
     this.message = '';
     this.modelThinking = true;
+    const el = this.chatContainer.nativeElement;
+    el.scrollTop = el.scrollHeight;
     const response = await this.campaignDetailsService.postChatMessageAsync(postChatMessage);
 
     const responseChatMessage: ChatMessageModel = {
