@@ -1,15 +1,17 @@
 ﻿using RpWeave.Server.Core.Startup;
-using RpWeave.Server.Integrations.Ollama.Chat;
 using RpWeave.Server.Integrations.Ollama.Embed;
 using RpWeave.Server.Integrations.Qdrant;
-using RpWeave.Server.Integrations.Qdrant.Requests;
-using RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
-using RpWeave.Server.Orchestrations.BookBreakdown.Prompts;
-using RpWeave.Server.Orchestrations.BookBreakdown.Tools;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Classification;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction.Markdown;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction.Pdf;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Storage;
 
 namespace RpWeave.Server.Orchestrations.BookBreakdown;
 
 public record BookBreakdownOrchestrationRequest(
+    string CampaignName,
+    string CampaignId,
     string FilePath,
     int ChapterFontSize,
     int SubChapterFontSize,
@@ -18,31 +20,50 @@ public record BookBreakdownOrchestrationRequest(
 
 [ScopedService]
 public class BookBreakdownOrchestrator(
-    OllamaEmbedClient embedClient,
-    VectorDbClient vectorDbClient)
+    MarkdownChunkModule markdownChunkModule,
+    StorageModule storageModule)
 {
     public async Task<string> ProcessBookBreakdown(BookBreakdownOrchestrationRequest request)
     {
-        var pdfChunker = new PdfChunkModule();
-        var pdfChunkRequest = new PdfChunkRequest(request.FilePath, request.ChapterFontSize, request.SubChapterFontSize, request.HeaderFontSize, request.IgnoreFooter);
-        var chunks = pdfChunker.ChunkPdf(pdfChunkRequest);
+        var chunks = new List<TextChunk>();
 
-        foreach (var chunk in chunks)
+        if (Path.GetExtension(request.FilePath) == ".pdf")
         {
-            chunk.Content = chunk.Content.Insert(0, $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}\n");
+            var pdfChunker = new PdfChunkModule();
+            var pdfChunkRequest = new PdfChunkRequest(request.FilePath, request.ChapterFontSize, request.SubChapterFontSize, request.HeaderFontSize, request.IgnoreFooter);
+            chunks = pdfChunker.ChunkPdf(pdfChunkRequest);
         }
-        
-        var collectionName = $"{Path.GetFileNameWithoutExtension(request.FilePath)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
-        await vectorDbClient.CreateCollectionAsync(collectionName);
-        
-        foreach (var chunk in chunks)
+        else if (Path.GetExtension(request.FilePath) == ".md")
         {
-            var vector = await embedClient.GenerateEmbeddingsAsync(chunk.Content);
-        
-            await vectorDbClient.UpsertAsync(
-                new VectorDbUpsertRequest(collectionName, vector, $"{chunk.Chapter} > {chunk.Subchapter}",
-                    chunk.Content));
+            var mdChunker = new MarkdownChunkModule();
+            var mdChunkRequest = new MarkdownChunkRequest(request.FilePath);
+            chunks = mdChunker.Process(mdChunkRequest);
         }
+
+        var storageRequest = new StorageRequest()
+        {
+            Name = request.CampaignName,
+            CampaignId = request.CampaignId,
+            Chunks = chunks
+        };
+        var collectionName = await storageModule.ProcessAsync(storageRequest);
+
+        // var index = 0;
+        // do
+        // {
+        //     var classificationInput = "";
+        //
+        //     for (int i = 0; i < 5; i++)
+        //     {
+        //         if(index < chunks.Count)
+        //             classificationInput += chunks[index].Content + "\n\n";
+        //
+        //         index++;
+        //     }
+        //     
+        //     classifications += await classificationModule.ClassifyAsync(classificationInput);
+        // }
+        // while(index < chunks.Count);
         
         return collectionName;
     }

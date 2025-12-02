@@ -5,7 +5,7 @@ using UglyToad.PdfPig;
 using UglyToad.PdfPig.DocumentLayoutAnalysis;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
 
-namespace RpWeave.Server.Orchestrations.BookBreakdown.Pdf;
+namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction.Pdf;
 
 public record PdfChunkRequest(
     string FilePath,
@@ -16,10 +16,10 @@ public record PdfChunkRequest(
 
 public class PdfChunkModule
 {
-    public List<PdfChunk> ChunkPdf(PdfChunkRequest request)
+    public List<TextChunk> ChunkPdf(PdfChunkRequest request)
     {
         using var pdf = PdfDocument.Open(request.FilePath);
-        var chunks = new List<PdfChunk>();
+        var chunks = new List<TextChunk>();
 
         var chapterName = "";
         var subChapterName = "";
@@ -32,6 +32,9 @@ public class PdfChunkModule
             var footerThreshold = page.Height * 0.05;
             var words = page.GetWords();
             var blocks = RecursiveXYCut.Instance.GetBlocks(words);
+
+            if (blocks.Count == 0)
+                continue;
             
             var orderedBlocks = OrderTextBlocks(blocks, true);
 
@@ -58,11 +61,11 @@ public class PdfChunkModule
                         {
                             if (currentContent.Length > 0)
                             {
-                                var chunk = new PdfChunk
+                                var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -84,11 +87,11 @@ public class PdfChunkModule
                         {
                             if (currentContent.Length > 0)
                             {
-                                var chunk = new PdfChunk
+                                var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -109,11 +112,11 @@ public class PdfChunkModule
                         {
                             if (currentContent.Length > 0)
                             {
-                                var chunk = new PdfChunk
+                                var chunk = new TextChunk
                                 {
-                                    Chapter = chapterName.Trim(),
-                                    Subchapter = subChapterName.Trim(),
-                                    Header = headerName.Trim(),
+                                    Level1Heading = chapterName.Trim(),
+                                    Level2Heading = subChapterName.Trim(),
+                                    Level3Heading = headerName.Trim(),
                                     Order = order,
                                     Content = currentContent.Trim()
                                 };
@@ -136,7 +139,7 @@ public class PdfChunkModule
 
         foreach (var chunk in chunks)
         {
-            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Chapter} > {chunk.Subchapter} > {chunk.Header}",
+            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading}",
                 chunk.Content);
         }
 

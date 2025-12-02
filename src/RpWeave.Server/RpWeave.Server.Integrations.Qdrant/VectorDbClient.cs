@@ -36,15 +36,15 @@ public class VectorDbClient
             Vectors = request.Vector,
             Payload =
             {
-                ["titlePath"] = request.TitlePath,
+                ["id"] = request.Id,
                 ["text"] = request.Text
             }
         };
         
         var result = await qdrantClient.UpsertAsync(request.CollectionName, [pointStruct]);
         
-        Log.Information("Updated vectors for title path {titlePath} with result {result}",
-            request.TitlePath, result.Status.ToString());
+        Log.Information("Updated vectors for id {titlePath} with result {result}",
+            request.Id, result.Status.ToString());
     }
 
     public async Task<VectorDbSearchResponse> SearchAsync(VectorDbSearchRequest request)
@@ -52,13 +52,13 @@ public class VectorDbClient
         var points = await qdrantClient.SearchAsync(
             request.CollectionName,
             request.Vector,
-            limit: 8);
+            limit: 10);
         
         var resultElements = new List<VectorDbSearchResponseElement>();
         foreach (var point in points)
         {
             var element = new VectorDbSearchResponseElement(
-                point.Payload.FirstOrDefault(x => x.Key == "titlePath").Value.StringValue,
+                point.Payload.FirstOrDefault(x => x.Key == "id").Value.StringValue,
                 point.Payload.FirstOrDefault(x => x.Key == "text").Value.StringValue,
                 point.Score);
             

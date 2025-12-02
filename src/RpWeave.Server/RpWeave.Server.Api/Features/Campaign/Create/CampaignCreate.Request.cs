@@ -1,6 +1,6 @@
 namespace RpWeave.Server.Api.Features.Campaign.Create;
 
-public record CampaignCreateRequest(string Data, IFormFile? Pdf);
+public record CampaignCreateRequest(string Data, IFormFile? File);
 
 public record CampaignCreateData(
     string Name, 

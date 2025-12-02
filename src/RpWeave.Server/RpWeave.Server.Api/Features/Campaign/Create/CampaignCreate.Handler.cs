@@ -36,16 +36,19 @@ public class CampaignCreateHandler(
         };
         
         // Store file
-        if (request.Pdf != null)
+        if (request.File != null)
         {
-            var filePath = Path.Combine(BaseFilePath, $"{entity.Id}.pdf");
+            var extension = Path.GetExtension(request.File.FileName);
+            var filePath = Path.Combine(BaseFilePath, $"{entity.Id}{extension}");
             await using Stream fileStream = new FileStream(filePath, FileMode.Create);
-            await request.Pdf.CopyToAsync(fileStream);
+            await request.File.CopyToAsync(fileStream);
             entity.PdfPath = filePath;
 
             if (data.CreateEmbeddings)
             {
                 var orchestrationRequest = new BookBreakdownOrchestrationRequest(
+                    entity.Name,
+                    entity.Id.ToString(),
                     filePath, 
                     data.ChapterFontSize!.Value, 
                     data.SubChapterFontSize!.Value, 

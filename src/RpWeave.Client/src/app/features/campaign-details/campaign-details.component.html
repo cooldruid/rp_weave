@@ -20,7 +20,7 @@
                 <h4>Chat</h4>
                 <mat-divider></mat-divider>
             </mat-card-title>
-            <mat-card-content class="flex-grow-1 d-flex flex-column overflow-auto">
+            <mat-card-content #chatContainer class="flex-grow-1 d-flex flex-column overflow-auto">
                 @for(chatMessage of chatMessages; track chatMessage) {
                     @if(chatMessage.type == 'user') {
                         <mat-card appearance="outlined" class="align-self-end bg-secondary mb-4">
@@ -28,7 +28,7 @@
                         </mat-card>
                     }
                     @else {
-                        <span class="mb-4">{{chatMessage.content}}</span>
+                        <markdown class="mb-4" [data]="chatMessage.content"></markdown>
                     }
                 }
                 @if(modelThinking) {
@@ -39,7 +39,7 @@
                 <form class="d-flex col-12">
                     <mat-form-field class="col-11">
                         <mat-label>Chat</mat-label>
-                        <textarea matInput name="message" [(ngModel)]="message" [disabled]="modelThinking"></textarea>
+                        <textarea matInput name="message" [(ngModel)]="message" [disabled]="modelThinking" (keyup.enter)="sendMessage()"></textarea>
                     </mat-form-field>
                     <button matIconButton 
                         (click)="sendMessage()"
