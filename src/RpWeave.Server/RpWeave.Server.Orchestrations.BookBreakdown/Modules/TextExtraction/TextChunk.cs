@@ -1,4 +1,4 @@
-namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction;
+namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.TextExtraction;
 
 public class TextChunk
 {

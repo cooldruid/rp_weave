@@ -22,6 +22,10 @@ export class CampaignsComponent {
   { }
 
   async ngOnInit() {
+    await this.getCampaigns();
+  }
+
+  async getCampaigns() {
     const campaignList = await this.campaignsService.listCampaignsAsync();
     this.campaigns = campaignList.campaigns;
   }
@@ -34,7 +38,8 @@ export class CampaignsComponent {
     this.router.navigate(['campaigns/add']);
   }
 
-  onCampaignDelete() {
-    console.log('Not implemented yet');
+  async onCampaignDelete(id: string) {
+    await this.campaignsService.deleteCampaignAsync(id);
+    await this.getCampaigns();
   }
 }

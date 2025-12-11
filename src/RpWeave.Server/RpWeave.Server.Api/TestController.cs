@@ -8,6 +8,7 @@ using RpWeave.Server.Mcp;
 using RpWeave.Server.Mcp.Orchestrators;
 using RpWeave.Server.Mcp.Tools;
 using RpWeave.Server.Orchestrations.BookBreakdown;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.RelationshipExtraction;
 
 namespace RpWeave.Server.Api;
 
@@ -15,7 +16,8 @@ namespace RpWeave.Server.Api;
 public class TestController(
     BookBreakdownOrchestrator bookBreakdownOrchestrator,
     OllamaEmbedClient embedClient,
-    VectorDbClient vectorDbClient) : ControllerBase
+    VectorDbClient vectorDbClient,
+    RelationshipExtractionModule relationshipExtractionModule) : ControllerBase
 {
     [HttpGet("api/test/queryvector")]
     [AllowAnonymous]
@@ -28,5 +30,24 @@ public class TestController(
             searchVector));
         
         return Ok(response);
+    }
+
+    [HttpGet("api/test/extractrelationships")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ExtractRelationships(string collectionName, string entitiesString)
+    {
+        var entities = entitiesString.Split(",");
+        var entityObjects = new List<RelationshipExtractionEntity>();
+        foreach (var entity in entities)
+        {
+            var split = entity.Split("-");
+            entityObjects.Add(new RelationshipExtractionEntity(split[0].Trim(), split[1].Trim()));
+        }
+
+        var result =
+            await relationshipExtractionModule.ProcessAsync(
+                new RelationshipExtractionRequest(collectionName, entityObjects));
+        
+        return Ok(result);
     }
 }

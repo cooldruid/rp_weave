@@ -32,6 +32,15 @@ export class RpWeaveClient {
         return await lastValueFrom(get);
     }
 
+    public async deleteAsync<TResponse>(url: string): Promise<TResponse> {
+        const del = this.httpClient.delete<TResponse>(
+            this.createFullUrl(url), 
+            {
+                withCredentials: true
+            });
+        return await lastValueFrom(del);
+    }
+
     private createFullUrl(url: string) {
         return new URL(url, environment.rpWeaveApiUrl).toString();
     }

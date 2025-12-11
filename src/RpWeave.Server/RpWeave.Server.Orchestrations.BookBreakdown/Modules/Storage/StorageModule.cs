@@ -5,7 +5,7 @@ using RpWeave.Server.Data.Repositories;
 using RpWeave.Server.Integrations.Ollama.Embed;
 using RpWeave.Server.Integrations.Qdrant;
 using RpWeave.Server.Integrations.Qdrant.Requests;
-using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.TextExtraction;
 using Serilog;
 
 namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Storage;
@@ -21,20 +21,21 @@ public class StorageModule(
     {
         // create vector collection
         var collectionNamePrefix = request.Name.Replace(" ", "").ToLower();
-        var collectionName = $"{Path.GetFileNameWithoutExtension(collectionNamePrefix)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
+        var collectionName =
+            $"{Path.GetFileNameWithoutExtension(collectionNamePrefix)}-{DateTime.UtcNow:yyyyMMddHHmmss}";
         await vectorDbClient.CreateCollectionAsync(collectionName);
         Log.Information("Vector collection created with name: {CollectionName}", collectionName);
-        
+
         // store chapters in db
         var chapterGroups = request.Chunks.GroupBy(c => c.Level1Heading);
         foreach (var chapterGroup in chapterGroups)
         {
-            var chapterEntity = new ChapterEntity()
+            var chapterEntity = new ChapterEntity
             {
                 CampaignId = ObjectId.Parse(request.CampaignId),
                 Text = $"{chapterGroup.Key}\n\n"
             };
-            
+
             foreach (var chunk in chapterGroup)
             {
                 // create entity in db
@@ -42,11 +43,13 @@ public class StorageModule(
 
                 // create vector
                 await CreateVectorEntryAsync(chunk, collectionName, chapterEntity);
-                Log.Information("Vector entry created for chunk with path: {Path}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading} > {chunk.Level4Heading} > {chunk.Level5Heading}");
+                Log.Information("Vector entry created for chunk with path: {Path}",
+                    $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading} > {chunk.Level4Heading} > {chunk.Level5Heading}");
             }
-            
+
             await chapterEntityRepository.AddAsync(chapterEntity);
-            Log.Information("Chapter entity created for chapter {Chapter} of campaign {CampaignId}", chapterGroup.Key, request.CampaignId);
+            Log.Information("Chapter entity created for chapter {Chapter} of campaign {CampaignId}", chapterGroup.Key,
+                request.CampaignId);
         }
 
         return collectionName;
@@ -54,15 +57,18 @@ public class StorageModule(
 
     private async Task CreateVectorEntryAsync(TextChunk chunk, string collectionName, ChapterEntity chapterEntity)
     {
-        var headings = new List<string?> {chunk.Level1Heading, chunk.Level2Heading, chunk.Level3Heading, chunk.Level4Heading, chunk.Level5Heading}
+        var headings = new List<string?>
+            {
+                chunk.Level1Heading, chunk.Level2Heading, chunk.Level3Heading, chunk.Level4Heading, chunk.Level5Heading
+            }
             .Where(x => !string.IsNullOrWhiteSpace(x));
         var vectorContent = $"Chapter map: {string.Join(" > ", headings)}\n" +
                             $"Content: {chunk.Content}";
         var vector = await embedClient.GenerateEmbeddingsAsync(vectorContent);
-        
+
         await vectorDbClient.UpsertAsync(
-            new VectorDbUpsertRequest(collectionName, 
-                vector, 
+            new VectorDbUpsertRequest(collectionName,
+                vector,
                 chapterEntity.Id.ToString(),
                 vectorContent));
     }
@@ -70,8 +76,8 @@ public class StorageModule(
     private static void PopulateChapterEntityText(TextChunk chunk, ChapterEntity chapterEntity)
     {
         var chunkText = "";
-                
-        if(!string.IsNullOrWhiteSpace(chunk.Level2Heading))
+
+        if (!string.IsNullOrWhiteSpace(chunk.Level2Heading))
             chunkText += chunk.Level2Heading;
 
         if (!string.IsNullOrWhiteSpace(chunk.Level3Heading))
@@ -80,7 +86,7 @@ public class StorageModule(
         chunkText += "\n";
         chunkText += chunk.Content;
         chunkText += "\n\n";
-                
+
         chapterEntity.Text += chunkText;
     }
 }

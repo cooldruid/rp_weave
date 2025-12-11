@@ -3,7 +3,7 @@ using Markdig.Syntax;
 using RpWeave.Server.Core.Startup;
 using Serilog;
 
-namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction.Markdown;
+namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.TextExtraction.Markdown;
 
 [ScopedService]
 public class MarkdownChunkModule
@@ -12,7 +12,7 @@ public class MarkdownChunkModule
     {
         var markdownText = File.ReadAllText(request.FilePath);
         var markdown = Markdig.Markdown.Parse(markdownText);
-        
+
         var level1Heading = "";
         var level2Heading = "";
         var level3Heading = "";
@@ -20,7 +20,7 @@ public class MarkdownChunkModule
         var level5Heading = "";
         var currentContent = "";
         var order = 0;
-        
+
         var chunks = new List<TextChunk>();
 
         foreach (var block in markdown)
@@ -51,13 +51,13 @@ public class MarkdownChunkModule
                         currentContent = "";
                         order++;
                     }
-                    
+
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
                     level1Heading += text;
 
                     continue;
                 }
-                
+
                 if (heading.Level == 2)
                 {
                     if (currentContent.Length > 0)
@@ -81,13 +81,13 @@ public class MarkdownChunkModule
                         currentContent = "";
                         order++;
                     }
-    
+
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
                     level2Heading += text;
 
                     continue;
                 }
-                
+
                 if (heading.Level == 3)
                 {
                     if (currentContent.Length > 0)
@@ -110,13 +110,13 @@ public class MarkdownChunkModule
                         currentContent = "";
                         order++;
                     }
-                    
+
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
                     level3Heading += text;
 
                     continue;
                 }
-                
+
                 if (heading.Level == 4)
                 {
                     if (currentContent.Length > 0)
@@ -138,13 +138,13 @@ public class MarkdownChunkModule
                         currentContent = "";
                         order++;
                     }
-                    
+
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
                     level4Heading += text;
 
                     continue;
                 }
-                
+
                 if (heading.Level == 5)
                 {
                     if (currentContent.Length > 0)
@@ -165,26 +165,25 @@ public class MarkdownChunkModule
                         currentContent = "";
                         order++;
                     }
-                    
+
                     var text = string.Concat(heading.Inline?.Select(i => i.ToString()) ?? []);
                     level5Heading += text;
 
                     continue;
                 }
             }
-            
+
             //var blockText = string.Concat(block.Inline?.Select(i => i.ToString()) ?? []);
             var writer = new StringWriter();
             var renderer = new NormalizeRenderer(writer);
             renderer.Render(block);
             currentContent += writer.ToString();
         }
-        
+
         foreach (var chunk in chunks)
-        {
-            Log.Information("New chunk: {chunkPath}\n{content}", $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading}",
+            Log.Information("New chunk: {chunkPath}\n{content}",
+                $"{chunk.Level1Heading} > {chunk.Level2Heading} > {chunk.Level3Heading}",
                 chunk.Content);
-        }
 
         return chunks;
     }

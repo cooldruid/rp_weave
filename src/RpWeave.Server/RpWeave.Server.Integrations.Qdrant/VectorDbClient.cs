@@ -28,6 +28,12 @@ public class VectorDbClient
         });
     }
 
+    public async Task DeleteCollectionAsync(string collectionName)
+    {
+        if(await qdrantClient.CollectionExistsAsync(collectionName))
+            await qdrantClient.DeleteCollectionAsync(collectionName);
+    }
+
     public async Task UpsertAsync(VectorDbUpsertRequest request)
     {
         var pointStruct = new PointStruct

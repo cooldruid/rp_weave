@@ -1,4 +1,4 @@
-using RpWeave.Server.Orchestrations.BookBreakdown.Modules.Extraction;
+using RpWeave.Server.Orchestrations.BookBreakdown.Modules.TextExtraction;
 
 namespace RpWeave.Server.Orchestrations.BookBreakdown.Modules.Storage;
 

@@ -39,10 +39,16 @@ public class ChapterEntityRepository : IChapterEntityRepository
                 x.CampaignId == ObjectId.Parse(campaignId))
             .FirstOrDefaultAsync();
     }
+
+    public async Task DeleteForCampaignAsync(string campaignId)
+    {
+        await collection.DeleteManyAsync(x => x.CampaignId == ObjectId.Parse(campaignId));
+    }
 }
 
 public interface IChapterEntityRepository
 {
     Task AddAsync(ChapterEntity entity);
     Task<ChapterEntity> GetAsync(string id, string campaignId);
+    Task DeleteForCampaignAsync(string campaignId);
 }

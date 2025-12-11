@@ -24,21 +24,27 @@ public class CampaignEntityRepository : ICampaignEntityRepository
         await collection.InsertOneAsync(entity);
     }
 
-    public async Task<CampaignEntity> GetAsync(string id)
+    public async Task<CampaignEntity?> GetAsync(string id)
     {
         return await collection.Find(x => x.Id == ObjectId.Parse(id))
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync() ?? null;
     }
 
     public async Task<List<CampaignEntity>> ListAsync()
     {
         return (await collection.FindAsync(x => true)).ToList();
     }
+
+    public async Task DeleteAsync(string id)
+    {
+        await collection.DeleteOneAsync(x => x.Id == ObjectId.Parse(id));
+    }
 }
 
 public interface ICampaignEntityRepository
 {
     Task AddAsync(CampaignEntity entity);
-    Task<CampaignEntity> GetAsync(string id);
+    Task<CampaignEntity?> GetAsync(string id);
     Task<List<CampaignEntity>> ListAsync();
+    Task DeleteAsync(string id);
 }
