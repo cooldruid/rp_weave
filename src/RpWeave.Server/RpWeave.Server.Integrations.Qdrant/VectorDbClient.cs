@@ -1,5 +1,3 @@
-using Google.Protobuf.Collections;
-using Microsoft.Extensions.Logging;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using RpWeave.Server.Core.Startup;
@@ -14,9 +12,9 @@ public class VectorDbClient
 {
     private readonly QdrantClient qdrantClient;
     
-    public VectorDbClient()
+    public VectorDbClient(QdrantSettings qdrantSettings)
     {
-        qdrantClient = new QdrantClient("qdrant", https: false);
+        qdrantClient = new QdrantClient(qdrantSettings.QdrantHost, https: false);
     }
 
     public async Task CreateCollectionAsync(string collectionName)

@@ -9,9 +9,9 @@ public class AppUserRefreshTokenRepository : IAppUserRefreshTokenRepository
 {
     private readonly IMongoCollection<AppUserRefreshToken> refreshTokenCollection;
 
-    public AppUserRefreshTokenRepository()
+    public AppUserRefreshTokenRepository(MongoSettings mongoSettings)
     {
-        var mongoClient = new MongoClient("mongodb://mongo:27017");
+        var mongoClient = new MongoClient(mongoSettings.ConnectionString);
         
         var mongoDatabase = mongoClient.GetDatabase("rpweave");
         

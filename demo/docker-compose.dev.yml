@@ -1,29 +1,32 @@
-﻿services:
-  rpweave.server.api:
-    image: rpweave.server.api
+services:
+  rpweaveapi:
+    image: rpweave/api:dev
     user: root
-    build:
-      context: .
-      dockerfile: RpWeave.Server.Api/Dockerfile
+    container_name: rpweaveapi
     environment:
       - Authentication__TokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__Issuer=http://localhost:8080
       - Authentication__Audience=rp-weave-api
-      - MongoServerName=mongo
-      - QdrantServerName=qdrant
-      - OllamaServerName=ollama
+      - MongoServerName=mongo.dev
+      - QdrantServerName=qdrant.dev
+      - OllamaServerName=ollama.dev
       - OllamaReasoningModelName="qwen3:8b"
       - OllamaEmbeddingsModelName=mxbai-embed-large
     volumes:
-      - ./testResults:/home/test
       - uploads:/srv/rpweave/uploads
     ports:
       - "5000:8080"
 
+  rpweaveui:
+    image: rpweave/ui:dev
+    container_name: rpweaveui
+    ports:
+      - "22344:80"
+
   mongo:
     image: mongo
-    container_name: mongo
+    container_name: mongo.dev
     ports:
       - 27017:27017
     volumes:
@@ -34,31 +37,29 @@
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SERVER: mongo.dev
     depends_on:
       - mongo
 
   ollama:
     image: ollama/ollama
-    container_name: ollama
+    container_name: ollama.dev
     restart: always
     ports:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
-    environment:
-      - OLLAMA_DEBUG=1
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: all # alternatively, use `count: all` for all GPUs
+              count: all
               capabilities: [gpu]
 
   qdrant:
     image: qdrant/qdrant
-    container_name: qdrant
+    container_name: qdrant.dev
     ports:
       - 6333:6333
 
