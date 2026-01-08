@@ -51,8 +51,8 @@ public static class ServiceCollectionExtensions
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = authSettings.Issuer,
-                    ValidAudience = authSettings.Audience,
+                    ValidIssuer = Environment.GetEnvironmentVariable("PublicBaseUrl") ?? "http://localhost:8080",
+                    ValidAudience = "rp-weave-api",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.TokenSecret))
                 };
             });

@@ -8,6 +8,6 @@ export class ChangePasswordService {
     { }
 
     async changePassword(request: ChangePasswordModel) {
-        await this.client.postAsync('api/user/change-password', request);
+        await this.client.postAsync('/api/user/change-password', request);
     }
 }

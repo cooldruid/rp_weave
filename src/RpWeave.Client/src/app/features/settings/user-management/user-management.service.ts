@@ -9,12 +9,12 @@ export class UserManagementService {
     { }
 
     public async listUsers() : Promise<UserManagementList> {
-        return await this.client.getAsync<UserManagementList>('api/settings/list-users', {});
+        return await this.client.getAsync<UserManagementList>('/api/settings/list-users', {});
     }
 
     public async addUser(user: AddUserDialogResponse) {
         await this.client.postAsync<AddUserDialogResponse, void>(
-            'api/settings/create-user',
+            '/api/settings/create-user',
             user
         );
     }

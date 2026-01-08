@@ -4,15 +4,14 @@ services:
     user: root
     container_name: rpweaveapi
     environment:
-      - Authentication__TokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
-      - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
-      - Authentication__Issuer=http://localhost:8080
-      - Authentication__Audience=rp-weave-api
-      - MongoServerName=mongo.dev
-      - QdrantServerName=qdrant.dev
-      - OllamaServerName=ollama.dev
-      - OllamaReasoningModelName="qwen3:8b"
-      - OllamaEmbeddingsModelName=mxbai-embed-large
+      - Authentication__TokenSecret=${AuthenticationTokenSecret}
+      - Authentication__RefreshTokenSecret=${AuthenticationRefreshTokenSecret}
+      - PublicBaseUrl=${ApiPublicBaseUrl}
+      - MongoServerName=${MongoServerName}
+      - QdrantServerName=${QdrantServerName}
+      - OllamaServerName=${OllamaServerName}
+      - OllamaReasoningModelName=${OllamaReasoningModelName}
+      - OllamaEmbeddingsModelName=${OllamaEmbeddingsModelName}
     volumes:
       - uploads:/srv/rpweave/uploads
     ports:
@@ -21,12 +20,14 @@ services:
   rpweaveui:
     image: rpweave/ui:dev
     container_name: rpweaveui
+    environment:
+      - RpWeaveApiBaseUrl=${RpWeaveApiBaseUrl}
     ports:
       - "22344:80"
 
   mongo:
     image: mongo
-    container_name: mongo.dev
+    container_name: mongo.demo
     ports:
       - 27017:27017
     volumes:
@@ -37,13 +38,13 @@ services:
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo.dev
+      ME_CONFIG_MONGODB_SERVER: ${MongoServerName}
     depends_on:
       - mongo
 
   ollama:
     image: ollama/ollama
-    container_name: ollama.dev
+    container_name: ollama.demo
     restart: always
     ports:
       - "11434:11434"
@@ -59,7 +60,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant
-    container_name: qdrant.dev
+    container_name: qdrant.demo
     ports:
       - 6333:6333
 

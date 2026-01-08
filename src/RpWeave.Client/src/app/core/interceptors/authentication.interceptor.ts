@@ -28,7 +28,7 @@ export function authenticationInterceptor(req: HttpRequest<unknown>, next: HttpH
       if (err.status === 401) {
         if (!isRefreshing) {
           isRefreshing = true;
-          refreshPromise = rpWeaveClient.postAsync<null, RefreshTokenModel>('api/user/refresh-token', null)
+          refreshPromise = rpWeaveClient.postAsync<null, RefreshTokenModel>('/api/user/refresh-token', null)
             .then(newToken => {
               isRefreshing = false;
               refreshPromise = undefined;

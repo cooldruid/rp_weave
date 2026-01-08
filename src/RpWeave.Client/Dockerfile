@@ -17,7 +17,7 @@ FROM nginx:alpine
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
 # Copy Angular build output
 COPY --from=build /app/dist/rp-weave.client/browser /usr/share/nginx/html

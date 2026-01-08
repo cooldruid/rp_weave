@@ -15,7 +15,7 @@ export class SignupService {
             password: password
         }
 
-        await this.rpWeaveClient.postAsync<SignupRequestModel, void>('api/user/register', model);
+        await this.rpWeaveClient.postAsync<SignupRequestModel, void>('/api/user/register', model);
     }
 }
 
