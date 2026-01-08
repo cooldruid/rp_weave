@@ -3,11 +3,16 @@ using System.Text.Json;
 using AspNetCore.Identity.Mongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.AI;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
+using OllamaSharp;
 using RpWeave.Server.Api.Constants;
 using RpWeave.Server.Api.Settings;
+using RpWeave.Server.Data;
 using RpWeave.Server.Data.Entities;
+using RpWeave.Server.Integrations.Ollama;
+using RpWeave.Server.Integrations.Qdrant;
 using Serilog;
 
 namespace RpWeave.Server.Api.Extensions;
@@ -19,7 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddIdentityMongoDbProvider<AppUser, AppUserRole, ObjectId>(
             setupDatabaseAction: mongo =>
             {
-                mongo.ConnectionString = "mongodb://mongo:27017/rpweave";
+                mongo.ConnectionString = $"mongodb://{Environment.GetEnvironmentVariable("MongoServerName")}:27017/rpweave";
             });
 
         return services;
@@ -46,8 +51,8 @@ public static class ServiceCollectionExtensions
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = authSettings.Issuer,
-                    ValidAudience = authSettings.Audience,
+                    ValidIssuer = Environment.GetEnvironmentVariable("PublicBaseUrl") ?? "http://localhost:8080",
+                    ValidAudience = "rp-weave-api",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authSettings.TokenSecret))
                 };
             });
@@ -69,6 +74,47 @@ public static class ServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    public static IServiceCollection AddMongoSettings(this IServiceCollection services)
+    {
+        services.AddSingleton(new MongoSettings
+        {
+            ConnectionString = $"mongodb://{Environment.GetEnvironmentVariable("MongoServerName")}:27017"
+        });
+
+        return services;
+    }
+
+    public static IServiceCollection AddQdrantSettings(this IServiceCollection services)
+    {
+        services.AddSingleton(new QdrantSettings
+        {
+            // TODO: should verify instead
+            QdrantHost = Environment.GetEnvironmentVariable("QdrantServerName") ?? string.Empty
+        });
+
+        return services;
+    }
+    
+    public static IServiceCollection AddOllamaIntegration(this IServiceCollection serviceCollection)
+    {
+        var ollamaSettings = new OllamaSettings
+        {
+            Url = $"http://{Environment.GetEnvironmentVariable("OllamaServerName")}:11434",
+            ReasoningModel = Environment.GetEnvironmentVariable("OllamaReasoningModelName") ?? string.Empty,
+            EmbeddingsModel = Environment.GetEnvironmentVariable("OllamaEmbeddingsModelName") ?? string.Empty
+        };
+        
+        var ollama = new OllamaApiClient(new Uri(ollamaSettings.Url))
+        {
+            SelectedModel = ollamaSettings.ReasoningModel
+        };
+
+        serviceCollection.AddChatClient(ollama).UseFunctionInvocation();
+        serviceCollection.AddSingleton(ollamaSettings);
+
+        return serviceCollection;
     }
     
     public static IServiceCollection AddSystemSettings(this IServiceCollection services)

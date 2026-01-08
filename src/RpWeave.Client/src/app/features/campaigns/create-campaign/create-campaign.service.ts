@@ -7,6 +7,6 @@ export class CreateCampaignService {
     { }
 
     public async createCampaign(data: FormData) {
-        await this.client.postAsync('api/campaign/create', data);
+        await this.client.postAsync('/api/campaign/create', data);
     }
 }

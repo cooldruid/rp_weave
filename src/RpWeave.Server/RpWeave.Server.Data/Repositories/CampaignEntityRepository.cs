@@ -10,9 +10,9 @@ public class CampaignEntityRepository : ICampaignEntityRepository
 {
     private readonly IMongoCollection<CampaignEntity> collection;
 
-    public CampaignEntityRepository()
+    public CampaignEntityRepository(MongoSettings mongoSettings)
     {
-        var mongoClient = new MongoClient("mongodb://mongo:27017");
+        var mongoClient = new MongoClient(mongoSettings.ConnectionString);
 
         var mongoDatabase = mongoClient.GetDatabase("rpweave");
 

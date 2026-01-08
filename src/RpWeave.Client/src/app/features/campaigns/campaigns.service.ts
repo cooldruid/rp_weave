@@ -8,6 +8,6 @@ export class CampaignsService {
     { }
 
     public async listCampaignsAsync() : Promise<CampaignListModel> {
-        return await this.client.getAsync<CampaignListModel>('api/campaign', {});
+        return await this.client.getAsync<CampaignListModel>('/api/campaign', {});
     }
 }

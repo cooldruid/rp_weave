@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using RpWeave.Server.Integrations.Ollama.Embed;
 using RpWeave.Server.Integrations.Qdrant;
 using RpWeave.Server.Integrations.Qdrant.Requests;
-using RpWeave.Server.Mcp;
-using RpWeave.Server.Mcp.Orchestrators;
-using RpWeave.Server.Mcp.Tools;
 using RpWeave.Server.Orchestrations.BookBreakdown;
 
 namespace RpWeave.Server.Api;

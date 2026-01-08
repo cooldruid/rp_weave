@@ -10,6 +10,11 @@
       - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__Issuer=http://localhost:8080
       - Authentication__Audience=rp-weave-api
+      - MongoServerName=mongo
+      - QdrantServerName=qdrant
+      - OllamaServerName=ollama
+      - OllamaReasoningModelName="qwen3:8b"
+      - OllamaEmbeddingsModelName=mxbai-embed-large
     volumes:
       - ./testResults:/home/test
       - uploads:/srv/rpweave/uploads

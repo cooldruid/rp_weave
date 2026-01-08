@@ -15,7 +15,7 @@ export class LoginService {
             password: password
         }
 
-        const response = await this.rpWeaveClient.postAsync<LoginRequestModel, LoginResponseModel>('api/user/login', model);
+        const response = await this.rpWeaveClient.postAsync<LoginRequestModel, LoginResponseModel>('/api/user/login', model);
 
         this.userService.loadUser(response.accessToken);
     }

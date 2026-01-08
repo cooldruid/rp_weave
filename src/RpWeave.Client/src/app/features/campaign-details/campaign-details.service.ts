@@ -10,10 +10,10 @@ export class CampaignDetailsService {
     { }
 
     public async getCampaignDetailsAsync(id: string) : Promise<CampaignModel> {
-        return await this.client.getAsync(`api/campaign/${id}`, {});
+        return await this.client.getAsync(`/api/campaign/${id}`, {});
     }
 
     public async postChatMessageAsync(chatMessage: PostChatMessageModel) : Promise<ChatMessageResponseModel> {
-        return await this.client.postAsync<PostChatMessageModel, ChatMessageResponseModel>('api/ai/prompt', chatMessage);
+        return await this.client.postAsync<PostChatMessageModel, ChatMessageResponseModel>('/api/ai/prompt', chatMessage);
     }
 }

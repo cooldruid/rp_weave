@@ -10,9 +10,9 @@ public class ChapterEntityRepository : IChapterEntityRepository
 {
     private readonly IMongoCollection<ChapterEntity> collection;
 
-    public ChapterEntityRepository()
+    public ChapterEntityRepository(MongoSettings mongoSettings)
     {
-        var mongoClient = new MongoClient("mongodb://mongo:27017");
+        var mongoClient = new MongoClient(mongoSettings.ConnectionString);
 
         var mongoDatabase = mongoClient.GetDatabase("rpweave");
 

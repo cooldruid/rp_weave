@@ -6,6 +6,7 @@ export type User = {
     id: string;
     role: string;
     name: string;
+    exp: number;
 }
 
 const adminRole = 'ADMIN';
@@ -40,6 +41,16 @@ export class UserService {
 
     isAdmin(): boolean {
         return this._user$.value?.role === adminRole;
+    }
+
+    isTokenValid(): boolean {
+        if(!this._user$.value)
+            return false;
+
+        const date = new Date(this._user$.value.exp * 1000);
+        const now = new Date();
+        
+        return date > now;
     }
 
     clearUser() {

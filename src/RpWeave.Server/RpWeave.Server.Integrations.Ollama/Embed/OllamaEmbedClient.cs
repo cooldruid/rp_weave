@@ -5,17 +5,17 @@ using RpWeave.Server.Core.Startup;
 namespace RpWeave.Server.Integrations.Ollama.Embed;
 
 [ScopedService]
-public class OllamaEmbedClient
+public class OllamaEmbedClient(OllamaSettings ollamaSettings)
 {
     public async Task<float[]> GenerateEmbeddingsAsync(string input)
     {
         // Create an HTTP client and the OllamaApiClient
-        var httpClient = new HttpClient { BaseAddress = new Uri("http://ollama:11434") };
+        var httpClient = new HttpClient { BaseAddress = new Uri(ollamaSettings.Url) };
         var ollamaClient = new OllamaApiClient(httpClient);
 
         var request = new EmbedRequest()
         {
-            Model = "mxbai-embed-large",
+            Model = ollamaSettings.EmbeddingsModel,
             Input = [input]
         };
 

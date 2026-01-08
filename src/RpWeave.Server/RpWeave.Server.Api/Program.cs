@@ -1,13 +1,9 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Http.Features;
 using RpWeave.Server.Api;
 using RpWeave.Server.Api.Extensions;
 using RpWeave.Server.Api.Middleware;
 using RpWeave.Server.Core.Startup;
-using RpWeave.Server.Integrations.Ollama.Extensions;
-using RpWeave.Server.Mcp;
 using Serilog;
-using AssemblyMarker = RpWeave.Server.Data.AssemblyMarker;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -26,8 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAttributedServices(
     [
         typeof(Program).Assembly,
-        typeof(AssemblyMarker).Assembly,
-        typeof(RpWeave.Server.Mcp.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Data.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Orchestrations.BookBreakdown.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Ollama.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Qdrant.AssemblyMarker).Assembly
@@ -40,23 +35,22 @@ builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 
 builder.Services.AddRpwIdentityProvider()
     .AddRpwAuthentication(builder.Configuration)
     .AddRpwAuthorization()
+    .AddMongoSettings()
+    .AddQdrantSettings()
+    .AddOllamaIntegration()
     .AddSystemSettings();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddOllamaIntegration(builder.Configuration);
-
 var app = builder.Build();
-
-// this is bad bad bad, but will do for now
-ServiceProviderInstance.Initialize(app.Services);
 
 app.UseCors(options => 
     options.AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
-        .WithOrigins("http://localhost:4200"));
+        // also temporary, should come from env
+        .WithOrigins("http://localhost:4200", "http://rpweaveui:80", "http://localhost:22344"));
 
 app.UseHttpsRedirection();
 app.UseRouting();
