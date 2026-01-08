@@ -31,13 +31,13 @@ jobs:
       - name: Build & Push API
         run: |
           docker build -t cooldruid12/rpweave.api:edge ./src/RpWeave.Server
-          docker tag yourorg/backend:edge cooldruid12/rpweave.api:${DATE_TAG}-${SHA_TAG}
+          docker tag cooldruid12/rpweave.api:edge cooldruid12/rpweave.api:${DATE_TAG}-${SHA_TAG}
           docker push cooldruid12/rpweave.api:edge
           docker push cooldruid12/rpweave.api:${DATE_TAG}-${SHA_TAG}
 
       - name: Build & Push Frontend
         run: |
           docker build -t cooldruid12/rpweave.ui:edge ./src/RpWeave.Client
-          docker tag yourorg/backend:edge cooldruid12/rpweave.ui:${DATE_TAG}-${SHA_TAG}
+          docker tag cooldruid12/rpweave.ui:edge cooldruid12/rpweave.ui:${DATE_TAG}-${SHA_TAG}
           docker push cooldruid12/rpweave.ui:edge
           docker push cooldruid12/rpweave.ui:${DATE_TAG}-${SHA_TAG}
