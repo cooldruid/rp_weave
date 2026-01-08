@@ -4,14 +4,14 @@ services:
     user: root
     container_name: rpweaveapi
     environment:
-      - Authentication__TokenSecret=${AuthenticationTokenSecret}
-      - Authentication__RefreshTokenSecret=${AuthenticationRefreshTokenSecret}
-      - PublicBaseUrl=${ApiPublicBaseUrl}
-      - MongoServerName=${MongoServerName}
-      - QdrantServerName=${QdrantServerName}
-      - OllamaServerName=${OllamaServerName}
-      - OllamaReasoningModelName=${OllamaReasoningModelName}
-      - OllamaEmbeddingsModelName=${OllamaEmbeddingsModelName}
+      - Authentication__TokenSecret=${AuthenticationTokenSecret}                  # secret value used for access token generation
+      - Authentication__RefreshTokenSecret=${AuthenticationRefreshTokenSecret}    # secret value used for refresh token generation
+      - PublicBaseUrl=${ApiPublicBaseUrl}                                         # base url of the api
+      - MongoServerName=${MongoServerName}                                        # container name of your mongo instance
+      - QdrantServerName=${QdrantServerName}                                      # container name of your qdrant instance
+      - OllamaServerName=${OllamaServerName}                                      # container name of your ollama instance
+      - OllamaReasoningModelName=${OllamaReasoningModelName}                      # your preferred reasoning model
+      - OllamaEmbeddingsModelName=${OllamaEmbeddingsModelName}                    # your preferred embeddings model
     volumes:
       - uploads:/srv/rpweave/uploads
     ports:
@@ -21,7 +21,7 @@ services:
     image: cooldruid12/rpweave.ui:edge
     container_name: rpweaveui
     environment:
-      - RpWeaveApiBaseUrl=${RpWeaveApiBaseUrl}
+      - RpWeaveApiBaseUrl=${RpWeaveApiBaseUrl}                                    # url of the api to connect to, usually "http://<api_container_name>:8080"
     ports:
       - "5010:80"
 
