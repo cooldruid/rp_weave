@@ -23,7 +23,7 @@ builder.Services.AddAttributedServices(
     [
         typeof(Program).Assembly,
         typeof(RpWeave.Server.Data.AssemblyMarker).Assembly,
-        typeof(RpWeave.Server.Orchestrations.BookBreakdown.AssemblyMarker).Assembly,
+        typeof(RpWeave.Server.Orchestrations.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Ollama.AssemblyMarker).Assembly,
         typeof(RpWeave.Server.Integrations.Qdrant.AssemblyMarker).Assembly
     ]);

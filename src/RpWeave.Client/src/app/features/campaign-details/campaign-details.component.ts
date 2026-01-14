@@ -10,12 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { ChatMessageModel } from './models/chat-message.model';
 import { PostChatMessageModel } from './models/post-chat-message.model';
 import { FormsModule } from '@angular/forms';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MarkdownModule } from 'ngx-markdown';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-campaign-details',
-  imports: [MarkdownModule, FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule],
+  imports: [MatProgressBarModule, MatTabsModule, MarkdownModule, FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule],
   templateUrl: './campaign-details.component.html',
   styleUrl: './campaign-details.component.scss',
 })
@@ -41,6 +43,11 @@ export class CampaignDetailsComponent {
   }
 
   async sendMessage() {
+    this.message = this.message.trim();
+
+    if(this.message.length == 0)
+      return;
+
     const nextOrder = Math.max(...this.chatMessages.map(x => x.order));
 
     const chatMessage: ChatMessageModel = {
