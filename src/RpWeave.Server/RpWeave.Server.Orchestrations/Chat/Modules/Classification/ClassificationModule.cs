@@ -12,7 +12,7 @@ public class ClassificationModule(OllamaChatClient chatClient)
     public async Task<ClassificationResponse> ProcessAsync(ClassificationRequest request)
     {
         var chatRequest = new OllamaChatRequest(
-            SystemPrompt: ClassificationPrompts.SystemPrompt,
+            SystemPrompt: ClassificationPrompts.SystemPrompt(request.ChatHistory),
             UserPrompt: request.Query,
             Tools: []);
         
@@ -22,8 +22,8 @@ public class ClassificationModule(OllamaChatClient chatClient)
 
         if (classificationResponse == null)
         {
-            Log.Warning("Failed to deserialize classification response. Falling back to raw user input.");
-            classificationResponse = new ClassificationResponse(true, request.Query);
+            Log.Warning("Failed to get classification response. Falling back to raw user input.");
+            classificationResponse = new ClassificationResponse(true, request.Query, string.Empty);
         }
         
         return classificationResponse;

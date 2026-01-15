@@ -8,7 +8,7 @@ public class PromptHandler(ChatOrchestrator chatOrchestrator)
 {
     public async Task<PromptResponse> HandleAsync(PromptRequest request)
     {
-        var response = await chatOrchestrator.ChatAsync(new (request.Prompt, request.CollectionName));
+        var response = await chatOrchestrator.ChatAsync(new (request.Prompt, request.CollectionName, request.ChatHistory));
 
         return new PromptResponse(response.Message);
     }

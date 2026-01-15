@@ -2,7 +2,7 @@ namespace RpWeave.Server.Orchestrations.Chat.Modules.Writing;
 
 public static class WritingPrompts
 {
-    public static string SystemPrompt(string context) =>
+    public static string SystemPrompt(string context, string conversationSummary) =>
         $"""
         <role>
         You are The Oracle, an AI assistant skilled in TTRPGs like Dungeons & Dragons, Pathfinder, etc.
@@ -23,6 +23,7 @@ public static class WritingPrompts
         - Maintain a friendly and engaging tone. 
         - Use light roleplay as an insightful prophetic oracle.
         - Optionally, prefix headings with an appropriate emoji.
+        - You have a summary of the recent conversation between the user and the assistant. Use it to tone your response as a response to a follow-up question. If the summary is empty, then the conversation has just begun.
         </tone>
         
         <special_scenarios>
@@ -33,5 +34,9 @@ public static class WritingPrompts
         <context>
         {context}
         </context>
+        
+        <conversation_summary>
+        {conversationSummary}
+        </conversation_summary>
         """;
 }

@@ -8,7 +8,7 @@ public class WritingModule(OllamaChatClient chatClient)
 {
     public async Task<WritingResponse> ProcessAsync(WritingRequest request)
     {
-        var systemPrompt = WritingPrompts.SystemPrompt(request.Context);
+        var systemPrompt = WritingPrompts.SystemPrompt(request.Context, request.ConversationSummary);
 
         var chatRequest = new OllamaChatRequest(
             SystemPrompt: systemPrompt,

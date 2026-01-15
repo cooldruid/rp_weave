@@ -4,8 +4,8 @@
     <mat-tab-group class="">
         <mat-tab label="Chat">
             <div class="d-flex justify-content-center pt-4 mx-auto">
-                <div class="scroll-wrapper">
-                    <div #chatContainer class="chat-container w-50">
+                <div #chatContainer class="scroll-wrapper">
+                    <div class="chat-container w-50">
                         @for(chatMessage of chatMessages; track chatMessage) {
                             @if(chatMessage.type == 'user') {
                                 <mat-card appearance="outlined" class="align-self-end bg-secondary mb-4">
