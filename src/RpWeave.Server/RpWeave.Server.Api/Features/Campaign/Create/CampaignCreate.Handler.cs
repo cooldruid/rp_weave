@@ -15,7 +15,7 @@ public class CampaignCreateHandler(
 {
     private const string BaseFilePath = "/srv/rpweave/uploads";
     
-    public async Task<Result> HandleAsync(CampaignCreateRequest request)
+    public async Task<ValueResult<CampaignCreateResponse>> HandleAsync(CampaignCreateRequest request)
     {
         // Validation
         var data = JsonSerializer.Deserialize<CampaignCreateData>(request.Data,
@@ -27,7 +27,7 @@ public class CampaignCreateHandler(
         var validationResult = await validator.ValidateAsync(request);
         
         if(!validationResult.IsValid)
-            return Result.Failure(ErrorCodes.UserInput, string.Join("\n", validationResult.Errors));
+            return ValueResult<CampaignCreateResponse>.Failure(ErrorCodes.UserInput, string.Join("\n", validationResult.Errors));
         
         // Create entity
         var entity = new CampaignEntity
@@ -62,6 +62,6 @@ public class CampaignCreateHandler(
         
         await campaignRepository.AddAsync(entity);
         
-        return Result.Success();
+        return ValueResult<CampaignCreateResponse>.Success(new(entity.Id.ToString()));
     }
 }

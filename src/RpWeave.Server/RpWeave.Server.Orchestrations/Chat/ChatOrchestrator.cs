@@ -1,6 +1,7 @@
 using System.Text;
 using RpWeave.Server.Core.Startup;
 using RpWeave.Server.Orchestrations.Chat.Modules.Classification;
+using RpWeave.Server.Orchestrations.Chat.Modules.Editing;
 using RpWeave.Server.Orchestrations.Chat.Modules.VectorSearch;
 using RpWeave.Server.Orchestrations.Chat.Modules.Writing;
 
@@ -10,7 +11,8 @@ namespace RpWeave.Server.Orchestrations.Chat;
 public class ChatOrchestrator(
     ClassificationModule classificationModule,
     VectorSearchModule vectorSearchModule,
-    WritingModule writingModule)
+    WritingModule writingModule,
+    EditingModule editingModule)
 {
     public async Task<ChatResponse> ChatAsync(ChatRequest chatRequest)
     {
@@ -35,6 +37,9 @@ public class ChatOrchestrator(
         
         var writingRequest = new WritingRequest(context, classification.StandaloneQuestion, classification.ConversationSummary);
         var writingResponse = await writingModule.ProcessAsync(writingRequest);
+
+        // var editingRequest = new EditingRequest(writingResponse.Message, classification.Advice);
+        // var editingResponse = await editingModule.ProcessAsync(editingRequest);
 
         return new ChatResponse(writingResponse.Message);
     }

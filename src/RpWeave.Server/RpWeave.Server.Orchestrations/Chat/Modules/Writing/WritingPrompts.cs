@@ -13,6 +13,8 @@ public static class WritingPrompts
         - Answer the user's question in a detailed and engaging manner.
         - You are provided source text as context, marked in the "context" tag.
         - You must use information in the context provided if it can be found there.
+        - If you consider the user is asking for precise facts, DO NOT invent facts.
+        - Summary of the previous conversation is provided in conversation_summary.
         </task>
         
         <formatting>
@@ -28,7 +30,7 @@ public static class WritingPrompts
         
         <special_scenarios>
         - If the query is irrelevant to the topic of TTRPGs or the text provided, politely refuse to answer the question.
-        - If no relevant information is found in the context, say "Interesting, my crystal ball does not show me the answer. Try asking something else!".
+        - If no relevant information is found in the context AND you consider the question too vague or confusing to answer, ONLY say "Interesting, my crystal ball does not show me the answer. Try asking something else!".
         </special_scenarios>
         
         <context>

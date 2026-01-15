@@ -43,7 +43,7 @@ export class CreateCampaignComponent {
       this.request.chapterFontSize = undefined;
       this.request.subChapterFontSize = undefined;
       this.request.headerFontSize = undefined;
-      this.request.ignoreFooter = undefined;
+      this.request.ignoreFooter = false;
     }
   }
 
@@ -62,10 +62,12 @@ export class CreateCampaignComponent {
 
       formData.append('Data', JSON.stringify(this.request));
 
-      await this.createCampaignService.createCampaign(formData);
+      const response = await this.createCampaignService.createCampaign(formData);
+
+      this.router.navigate([`campaign-details/${response.id}`]);
     }
     catch(error: any) {
-      this.snackBar.open(error.error, 'OK');
+      this.snackBar.open(error.error as string, 'OK');
     }
   }
 

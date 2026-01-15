@@ -23,7 +23,7 @@ public class ClassificationModule(OllamaChatClient chatClient)
         if (classificationResponse == null)
         {
             Log.Warning("Failed to get classification response. Falling back to raw user input.");
-            classificationResponse = new ClassificationResponse(true, request.Query, string.Empty);
+            classificationResponse = new ClassificationResponse(true, request.Query, string.Empty, string.Empty);
         }
         
         return classificationResponse;
