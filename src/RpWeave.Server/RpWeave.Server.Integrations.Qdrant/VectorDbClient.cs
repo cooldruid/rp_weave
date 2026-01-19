@@ -50,7 +50,7 @@ public class VectorDbClient
         var points = await qdrantClient.SearchAsync(
             request.CollectionName,
             request.Vector,
-            limit: 10);
+            limit: 6);
         
         var resultElements = new List<VectorDbSearchResponseElement>();
         foreach (var point in points)

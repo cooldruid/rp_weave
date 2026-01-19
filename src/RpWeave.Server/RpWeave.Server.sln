@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Integrations
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchestrations", "Orchestrations", "{B8A57566-9271-4C51-BD7F-D8C840C7FEE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Orchestrations.BookBreakdown", "RpWeave.Server.Orchestrations.BookBreakdown\RpWeave.Server.Orchestrations.BookBreakdown.csproj", "{9F3977D0-A260-4C0F-AC03-E7BC0C044C56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Orchestrations", "RpWeave.Server.Orchestrations\RpWeave.Server.Orchestrations.csproj", "{9F3977D0-A260-4C0F-AC03-E7BC0C044C56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpWeave.Server.Integrations.Qdrant", "RpWeave.Server.Integrations.Qdrant\RpWeave.Server.Integrations.Qdrant.csproj", "{9CA352C6-1413-4B33-902C-C4994048004A}"
 EndProject

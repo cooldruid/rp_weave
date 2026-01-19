@@ -1,20 +1,21 @@
-﻿services:
+﻿name: rpweave dev
+
+services:
   rpweave.server.api:
     image: rpweave.server.api
     user: root
     build:
-      context: .
-      dockerfile: RpWeave.Server.Api/Dockerfile
+      context: ./RpWeave.Server
+      dockerfile: ./Dockerfile
     environment:
       - Authentication__TokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
       - Authentication__RefreshTokenSecret=thisisthesecretforgeneratingakey(mustbeatleast32bitlong)
-      - Authentication__Issuer=http://localhost:8080
-      - Authentication__Audience=rp-weave-api
+      - PublicBaseUrl=http://localhost:8080
       - MongoServerName=mongo
       - QdrantServerName=qdrant
       - OllamaServerName=ollama
-      - OllamaReasoningModelName="qwen3:8b"
-      - OllamaEmbeddingsModelName=mxbai-embed-large
+      - OllamaReasoningModelName=qwen3:8b
+      - OllamaEmbeddingsModelName=bge-m3:latest
     volumes:
       - ./testResults:/home/test
       - uploads:/srv/rpweave/uploads
@@ -66,3 +67,4 @@ volumes:
   mongodbdata:
   ollama:
   uploads:
+  client:
