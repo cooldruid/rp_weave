@@ -1,0 +1,298 @@
+{
+  "name": "Prompt",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "prompt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c8755b22-539e-478f-8caa-0eee1b40c23e",
+      "name": "Webhook",
+      "webhookId": "b6fb15d3-b579-4c2e-a813-89634acd7ef0"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "qwen3:8b",
+          "mode": "list",
+          "cachedResultName": "qwen3:8b"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=<role>\nYou are an assistant in an AI system that is used as a companion for TTRPG games such as Dungeons & Dragons, Pathfinder, etc.\nYour purpose is of analyzing user query and conversation history.\nYou will be shared the user query and conversation history and you must classify the input based on criteria and labels provided.\nYou must also generate a standalone question that is not dependent on any context.\n</role>\n          \n<labels>\n1. standaloneQuestion (string): You must generate a self-contained, context-independent question based off the user's prompt.\nYou must essentially rephrase it in a way it can be understood without any other context. Do not remove details and special requests by the user.\nIf the user expresses doubt in any way, use their previously asked question as a reference to create the standalone question.\nFor example, if the conversation is about a person named John and the user inputs \"Where does he live\", then the standalone question must be \"Where does John live?\"\nAnother example, if the conversation is about a town called Townsville and the user inputs \"What are top 5 destinations there? Create a table\", then the standalone question must be \"What are top 5 destinations in Townsville? Create a table\"\n2. vectorDbQuery (string): You must generate a short but complete query used for searching in a vector database based off of the user's prompt. Make sure all possible keywords are contained. Infer new ones from the meaning when necessary. You may use your standalone question as the basis of the vector database query.\nFor example, if the prompt is \"Where does John live?\", a vectorDbQuery can be \"John location\" or \"John living place\".\n3. conversationSummary (string): You must generate a short summary of the conversation history. It will be read by an answering assistant so it must convey the most important points of the conversation well.\nThe assistant will not see the conversation history. If you decide that shouldSearch is false, you must make sure the conversation summary is complete enough to answer the question.\nInclude a a few sentences, focusing on what the topic is, what the focus is on and what was the last response about.\nAdditionally, give advice on the tone and language the assistant should use.\nFor example, if you have a conversation history looking like:\n\"user: Where can John find bread in Townsville?\nassistant: John can find bread in Townsville in the local bakery, called Steve's bakery!\"\nThen, the summary should be: \"The user is asking about Townsville. The focus is on John finding bread. The assistant guided the user towards Steve's bakery.\"\nIf there is no conversation history, or the conversation history is confusing, the summary should be an empty string.\n</labels>\n          \n<output_format>\nYou must respond ONLY in the following JSON format without extra text or explanations:\n{\n  \"standaloneQuestion\": string,\n  \"vectorDbQuery\": string,\n  \"conversationSummary\": string\n}\n</output_format>\n\n<conversation_history>\n{{ $json.body.chatHistory\n    .sort((x, y) => x.order - y.order)\n    .map(x => `${x.role}: ${x.message}`)\n    .join('\\n')}}\n</conversation_history>",
+              "role": "assistant"
+            },
+            {
+              "content": "={{ $json.body.prompt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c63bda21-8224-4d04-b612-370e431d0d10",
+      "name": "Classifier",
+      "credentials": {
+        "ollamaApi": {
+          "id": "5EKAAoGX7nhMxfYh",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const obj = JSON.parse($input.first().json.content);\n\nreturn obj;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "aa351b72-0186-4dba-ba2f-a46ab30b3958",
+      "name": "Parse model output"
+    },
+    {
+      "parameters": {
+        "model": "bge-m3:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        768,
+        192
+      ],
+      "id": "5ea4b5f3-cd71-4172-932b-d15f96de688b",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "5EKAAoGX7nhMxfYh",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "={{ $('Webhook').item.json.body.qdrantCollectionName }}",
+          "mode": "id"
+        },
+        "prompt": "={{ $json.vectorDbQuery }}",
+        "topK": 5,
+        "includeDocumentMetadata": false,
+        "options": {
+          "contentPayloadKey": "text"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        0
+      ],
+      "id": "e1ef22b7-45f2-483b-bfdc-77a6523b1732",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "Ju6M0DuYaXUyU6py",
+          "name": "QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "qwen3:8b",
+          "mode": "list",
+          "cachedResultName": "qwen3:8b"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=<role>\nYou are a reasoner, tasked with answering questions with long-form and complete answers based on given context.\n</role>\n\n<task>\n- Answer the user's question in a long-form and detailed manner.\n- You are provided source text as context, marked in the \"context\" tag.\n- You must use information in the context provided if it can be found there.\n- If you consider the user is asking for precise facts, DO NOT invent facts.\n- Do not engage with the user. Do not roleplay. Write in a completely neutral tone.\n</task>\n\n<formatting>\n- Use plaintext. No markdown, JSON or any other formats.\n</formatting>\n\n<special_scenarios>\n- If the query is irrelevant to the topic of TTRPGs or the text provided, ONLY say \"I refuse to answer.\".\n- If no relevant information is found in the context AND you consider the question too vague or confusing to answer, ONLY say \"Question cannot be answered\".\n</special_scenarios>\n\n<context>\n{{ $json.text }}\n</context>\n",
+              "role": "assistant"
+            },
+            {
+              "content": "={{ $('Parse model output').first().json.standaloneQuestion }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        0
+      ],
+      "id": "db2f357e-0781-4649-bd81-761277bb0f48",
+      "name": "Reasoner",
+      "credentials": {
+        "ollamaApi": {
+          "id": "5EKAAoGX7nhMxfYh",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.all()\n  .sort((x, y) => x.json.score - y.json.score)\n  .map(x => x.json.document.pageContent)\n  .join('\\n---\\n');\n\nreturn {text};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "5ae3eec8-a4c6-4266-8d18-be1d6cbd178c",
+      "name": "Parse Qdrant output"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "qwen3:8b",
+          "mode": "list",
+          "cachedResultName": "qwen3:8b"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=<role>\nYou are The Oracle, a prophetic TTRPG narrator.\nYour job is to make neutral answers readable, concise, and lightly engaging for a human user.\nYou may include very light roleplay, but do not add extra facts or lengthy storytelling.\n</role>\n\n<task>\nYou are provided a neutral answer to a question.\n- Rewrite it clearly and concisely for a human reader.\n- Keep all the original facts; do not invent anything.\n- Use short paragraphs, numbered lists, or headings for clarity.\n- Include small touches of roleplay, e.g., brief commentary or oracle-style phrasing, but keep it minimal.\n- Optionally, frame the sections with a short introductory and closing sentence.\n</task>\n\n<formatting>\n- Markdown only.\n- Headings and lists to structure content\n- Paragraphs no longer than 2–3 sentences\n</formatting>\n\n<tone>\n- Friendly and engaging\n- Light oracle roleplay\n- Focus on readability and clarity over dramatic prose\n</tone>\n\n<special_scenarios>\n- If the answer is refusal, politely refuse to answer.\n- If the answer is an expression of confusion, express that to the user in a way fitting the context of the conversation.\n- If the answer seems like gibberish, express that something seems to have gone wrong.\n</special_scenarios>\n\n<answer>\n{{ $json.content }}\n</answer>\n\n<conversation_history>\n{{ $('Webhook').first().json.body.chatHistory\n    .sort((x, y) => x.order - y.order)\n    .slice(-4)\n    .map(x => `${x.role}: ${x.message}`)\n    .join('\\n')}}\n</conversation_history>",
+              "role": "assistant"
+            },
+            {
+              "content": "={{ $('Parse model output').first().json.standaloneQuestion }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        0
+      ],
+      "id": "9f5d1bba-024a-4af4-a489-2ccd0da23355",
+      "name": "Writer",
+      "credentials": {
+        "ollamaApi": {
+          "id": "5EKAAoGX7nhMxfYh",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classifier": {
+      "main": [
+        [
+          {
+            "node": "Parse model output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse model output": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        []
+      ],
+      "main": [
+        [
+          {
+            "node": "Parse Qdrant output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Qdrant output": {
+      "main": [
+        [
+          {
+            "node": "Reasoner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reasoner": {
+      "main": [
+        [
+          {
+            "node": "Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "3697ecb9-5c35-442a-9c6c-d63786a4dde2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c70a13391bb35b34a2733789fda0c801f92ee32775de479cf33ebe0c05ec811"
+  },
+  "id": "Ofuk2P11llNateY7O8Lxf",
+  "tags": []
+}
