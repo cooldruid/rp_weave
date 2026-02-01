@@ -34,6 +34,12 @@ public class CampaignEntityRepository : ICampaignEntityRepository
     {
         return (await collection.FindAsync(x => true)).ToList();
     }
+
+    public async Task<bool> DeleteAsync(string id)
+    {
+        var result = await collection.DeleteOneAsync(x => x.Id == ObjectId.Parse(id));
+        return result.IsAcknowledged ? result.DeletedCount > 0 : false;
+    }
 }
 
 public interface ICampaignEntityRepository
@@ -41,4 +47,5 @@ public interface ICampaignEntityRepository
     Task AddAsync(CampaignEntity entity);
     Task<CampaignEntity> GetAsync(string id);
     Task<List<CampaignEntity>> ListAsync();
+    Task<bool> DeleteAsync(string id);
 }
