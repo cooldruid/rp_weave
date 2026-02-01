@@ -1,6 +1,9 @@
 @if(campaign()) {
     <div class="mx-2 row gap-2">
-        <button matButton="outlined" color="warn" class="col-2">Delete Campaign</button>
+        <button matButton="outlined" color="warn" class="col-2"
+            (click)="onDeleteCampaign()">
+            Delete Campaign
+        </button>
     </div>
 
     <div class="m-2 row g-2">

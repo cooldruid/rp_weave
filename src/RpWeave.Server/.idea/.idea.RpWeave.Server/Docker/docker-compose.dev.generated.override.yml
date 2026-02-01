@@ -15,7 +15,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57400"
+    - "--roslyn-worker-port=57402"
     - "--timeout=60"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
@@ -24,14 +24,14 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "rpweave.server.api:dev"
     ports:
-    - "127.0.0.1:57000:57000"
-    - "127.0.0.1:57200:57200"
-    - "127.0.0.1:57400:57400"
+    - "127.0.0.1:57002:57000"
+    - "127.0.0.1:57202:57200"
+    - "127.0.0.1:57402:57402"
     volumes:
     - "/home/vasil/Projects/rp_weave/src/RpWeave.Server/RpWeave.Server.Api:/app:rw"
     - "/home/vasil/Projects/rp_weave/src/RpWeave.Server:/src:rw"
     - "/home/vasil/.nuget/packages:/root/.nuget/packages"
     - "/home/vasil/.local/share/JetBrains/RiderRemoteDebugger/2025.3.0.1/Linux64:/opt/JetBrains/RiderDebuggerTools"
     - "/home/vasil/Programs/Rider/JetBrains Rider-2024.3.7/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/home/vasil/.cache/JetBrains/Rider2025.3/log/DebuggerWorker/JetBrains.Debugger.Worker.2026_2_01_11_43_15:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/home/vasil/.cache/JetBrains/Rider2025.3/log/DebuggerWorker/JetBrains.Debugger.Worker.2026_2_01_13_28_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
