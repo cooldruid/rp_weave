@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Are you sure you want to delete this campaign?</h2>
+<mat-dialog-content>
+  <p>Deletion cannot be undone.</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton (click)="onCancel()">Cancel</button>
+  <button matButton [mat-dialog-close]="true" color="warn" cdkFocusInitial>Delete</button>
+</mat-dialog-actions>

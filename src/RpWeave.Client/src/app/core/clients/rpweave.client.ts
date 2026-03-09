@@ -30,4 +30,18 @@ export class RpWeaveClient {
 
         return await lastValueFrom(get);
     }
+
+    public async deleteAsync<TResponse>(url: string, queryParams: {}) : Promise<TResponse> {
+        const options = { 
+            params: new HttpParams().appendAll(queryParams),
+            withCredentials: true
+        };
+        
+        const get = this.httpClient.delete<TResponse>(
+            url,
+            options
+        );
+
+        return await lastValueFrom(get);
+    }
 }

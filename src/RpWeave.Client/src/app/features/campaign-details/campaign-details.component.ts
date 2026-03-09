@@ -15,10 +15,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MarkdownModule } from 'ngx-markdown';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CampaignInfoComponent } from "./campaign-info/campaign-info.component";
 
 @Component({
   selector: 'app-campaign-details',
-  imports: [MatProgressBarModule, MatTabsModule, MarkdownModule, FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule],
+  imports: [MatProgressBarModule, MatTabsModule, MarkdownModule, FormsModule, MatProgressSpinnerModule, MatListModule, MatCardModule, MatInputModule, MatIconModule, MatButtonModule, CampaignInfoComponent],
   templateUrl: './campaign-details.component.html',
   styleUrl: './campaign-details.component.scss',
 })
